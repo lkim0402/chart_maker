@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Custom Chart Maker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body
+    class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center p-4 sm:p-6 transition-colors duration-300"
+  >
+    <header class="w-full max-w-[1600px] text-center mb-6 relative">
+      <button
+        id="langToggle"
+        class="absolute right-0 top-0 bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded text-xs font-bold transition"
+      >
+        🌐 EN / KR
+      </button>
+      <h1 class="text-2xl font-extrabold text-white mb-1" data-i18n="mainTitle">
+        ✨ Advanced Custom Chart Maker
+      </h1>
+      <p class="text-gray-400 text-xs" data-i18n="mainDesc">
+        Adjust layouts, pan/zoom images, and drag numbers to customize your
+        chart.
+      </p>
+    </header>
+
+    <main
+      class="w-full max-w-[1600px] flex flex-col 2xl:flex-row gap-6 items-start justify-center"
+    >
+      <!-- Left Ad -->
+      <div class="w-full 2xl:w-48 shrink-0 2xl:block hidden">
+        <div
+          class="w-full bg-gray-800/40 border border-dashed border-gray-700 h-[600px] rounded-xl flex flex-col items-center justify-center text-center p-4 sticky top-6"
+        >
+          <span
+            class="text-[10px] font-semibold text-gray-500 tracking-wider uppercase"
+            >ADVERTISEMENT</span
+          >
+        </div>
+      </div>
+
+      <!-- Settings Panel -->
+      <div class="w-full 2xl:w-80 flex flex-col gap-4 shrink-0 z-20">
+        <div
+          class="bg-gray-800 p-3 rounded-xl border border-gray-700 shadow-md flex flex-col gap-3 max-h-[85vh] overflow-y-auto custom-scrollbar sticky top-6"
+        >
+          <!-- 1. Grid Layout -->
+          <div class="setting-section">
+            <h3 class="section-header" data-i18n="secLayout">Grid Layout</h3>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label
+                  class="block text-[10px] text-gray-400 mb-0.5"
+                  data-i18n="colLabel"
+                  >Columns</label
+                >
+                <input
+                  type="number"
+                  id="colInput"
+                  min="1"
+                  max="20"
+                  value="5"
+                  class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-[10px] text-gray-400 mb-0.5"
+                  data-i18n="rowLabel"
+                  >Rows</label
+                >
+                <input
+                  type="number"
+                  id="rowInput"
+                  min="1"
+                  max="20"
+                  value="4"
+                  class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Box Design -->
+          <div class="setting-section">
+            <h3 class="section-header" data-i18n="secBox">Box Design</h3>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label
+                  class="block text-[10px] text-gray-400"
+                  data-i18n="cellWLabel"
+                  >Width (px)</label
+                >
+                <input
+                  type="number"
+                  id="cellWidthInput"
+                  min="50"
+                  max="1000"
+                  value="300"
+                  class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-[10px] text-gray-400"
+                  data-i18n="cellHLabel"
+                  >Height (px)</label
+                >
+                <input
+                  type="number"
+                  id="cellHeightInput"
+                  min="50"
+                  max="1000"
+                  value="300"
+                  class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-[10px] text-gray-400"
+                  data-i18n="gapLabel"
+                  >Gap (px)</label
+                >
+                <input
+                  type="number"
+                  id="gapInput"
+                  min="0"
+                  max="100"
+                  value="10"
+                  class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-[10px] text-gray-400"
+                  data-i18n="radiusLabel"
+                  >Roundness (px)</label
+                >
+                <input
+                  type="number"
+                  id="radiusInput"
+                  min="0"
+                  max="500"
+                  value="8"
+                  class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Typography -->
+          <div class="setting-section">
+            <h3 class="section-header" data-i18n="secText">Typography</h3>
+            <div>
+              <label
+                class="block text-[10px] text-gray-400 mb-0.5"
+                data-i18n="fontLabel"
+                >Font Family</label
+              >
+              <select
+                id="fontSelect"
+                class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs"
+              >
+                <option value="'Noto Sans KR', sans-serif">
+                  Noto Sans / 고딕
+                </option>
+                <option value="'Black Han Sans', sans-serif">
+                  Black Han Sans
+                </option>
+                <option value="'Do Hyeon', sans-serif">Do Hyeon</option>
+                <option value="'Gowun Dodum', sans-serif">Gowun Dodum</option>
+              </select>
+            </div>
+            <div>
+              <label
+                class="block text-[10px] text-gray-400 mb-0.5"
+                data-i18n="mainTitleLabel"
+                >Main Title</label
+              >
+              <input
+                type="text"
+                id="titleInput"
+                value="My Favorite Characters"
+                class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs mb-1"
+              />
+              <div class="flex gap-2">
+                <input
+                  type="number"
+                  id="titleSize"
+                  min="10"
+                  max="200"
+                  value="32"
+                  class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs"
+                  title="Size"
+                />
+                <input
+                  type="color"
+                  id="titleColor"
+                  value="#ffffff"
+                  class="w-8 bg-gray-700 h-6 rounded border border-gray-600 p-0 cursor-pointer"
+                  title="Color"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                class="block text-[10px] text-gray-400 mb-0.5"
+                data-i18n="subTitleLabel"
+                >Subtitle</label
+              >
+              <input
+                type="text"
+                id="subtitleInput"
+                value="@ Fill in with your preferences @"
+                class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs mb-1"
+              />
+              <div class="flex gap-2">
+                <input
+                  type="number"
+                  id="subtitleSize"
+                  min="10"
+                  max="100"
+                  value="14"
+                  class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs"
+                  title="Size"
+                />
+                <input
+                  type="color"
+                  id="subtitleColor"
+                  value="#d4d4d4"
+                  class="w-8 bg-gray-700 h-6 rounded border border-gray-600 p-0 cursor-pointer"
+                  title="Color"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Background & Filters -->
+          <div class="setting-section">
+            <h3 class="section-header" data-i18n="secBg">
+              Background & Effects
+            </h3>
+
+            <div>
+              <label
+                class="block text-[10px] text-gray-400 mb-1"
+                data-i18n="bgTypeLabel"
+                >Background Type</label
+              >
+              <select
+                id="bgType"
+                class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs mb-1"
+              >
+                <option value="solid" data-i18n="bgSolid">Solid</option>
+                <option value="gradient2" data-i18n="bgGrad2">
+                  2-Color Gradient
+                </option>
+                <option value="gradient3" data-i18n="bgGrad3">
+                  3-Color Gradient
+                </option>
+              </select>
+              <select
+                id="gradDirection"
+                class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs mb-1 hidden"
+              >
+                <option value="to bottom" data-i18n="dirVert">Vertical</option>
+                <option value="to right" data-i18n="dirHorz">Horizontal</option>
+                <option value="135deg" data-i18n="dirDiagR">
+                  Diagonal Right
+                </option>
+              </select>
+              <div class="flex gap-1 mt-1">
+                <input
+                  type="color"
+                  id="bgColor1"
+                  value="#000000"
+                  class="w-full bg-gray-700 h-6 rounded border border-gray-600 p-0 cursor-pointer"
+                />
+                <input
+                  type="color"
+                  id="bgColor2"
+                  value="#1e3a8a"
+                  class="w-full bg-gray-700 h-6 rounded border border-gray-600 p-0 cursor-pointer hidden"
+                />
+                <input
+                  type="color"
+                  id="bgColor3"
+                  value="#8b5cf6"
+                  class="w-full bg-gray-700 h-6 rounded border border-gray-600 p-0 cursor-pointer hidden"
+                />
+              </div>
+            </div>
+
+            <div class="h-px bg-gray-700 my-1"></div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label
+                  class="block text-[10px] text-gray-400 mb-1"
+                  data-i18n="brightLabel"
+                  >Brightness</label
+                >
+                <input
+                  type="range"
+                  id="imgBrightness"
+                  min="10"
+                  max="200"
+                  value="100"
+                  class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-[10px] text-gray-400 mb-1"
+                  data-i18n="opacLabel"
+                  >Opacity</label
+                >
+                <input
+                  type="range"
+                  id="imgOpacity"
+                  min="10"
+                  max="100"
+                  value="100"
+                  class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            id="exportBtn"
+            class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded transition text-xs shadow-lg mt-2"
+            data-i18n="exportBtn"
+          >
+            Export PNG
+          </button>
+        </div>
+      </div>
+
+      <!-- Simulator Container -->
+      <div
+        class="flex-1 w-full max-w-2xl p-6 rounded-2xl border border-gray-800 shadow-2xl flex flex-col items-center overflow-hidden"
+        id="livePreviewContainer"
+        style="background-color: #000000"
+      >
+        <div class="text-center w-full mb-6 relative z-10">
+          <div
+            id="titlePreview"
+            class="font-black tracking-wide mb-2 min-h-[36px]"
+          ></div>
+          <div id="subtitlePreview" class="tracking-tight min-h-[16px]"></div>
+        </div>
+
+        <div
+          id="chartGrid"
+          class="grid w-full bg-transparent relative z-10"
+          style="--img-bright: 1; --img-opac: 1"
+        ></div>
+
+        <div
+          class="text-center mt-6 text-[10px] text-neutral-500 tracking-widest uppercase font-mono mix-blend-difference relative z-10"
+        >
+          CHARTMAKER.SITE
+        </div>
+      </div>
+
+      <!-- Right Ad -->
+      <div class="w-full 2xl:w-48 shrink-0 2xl:block hidden">
+        <div
+          class="w-full bg-gray-800/40 border border-dashed border-gray-700 h-[600px] rounded-xl flex flex-col items-center justify-center text-center p-4 sticky top-6"
+        >
+          <span
+            class="text-[10px] font-semibold text-gray-500 tracking-wider uppercase"
+            >ADVERTISEMENT</span
+          >
+        </div>
+      </div>
+    </main>
+
+    <canvas id="exportCanvas" class="hidden"></canvas>
+
+    <!-- Image Adjustment Modal -->
+    <div
+      id="imageModal"
+      class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+    >
+      <div
+        class="bg-gray-800 p-5 rounded-xl w-full max-w-sm border border-gray-700 shadow-2xl"
+      >
+        <h3
+          class="text-white font-bold mb-3 text-sm border-b border-gray-700 pb-2"
+        >
+          Adjust Image
+        </h3>
+
+        <div
+          class="bg-black mb-4 flex items-center justify-center overflow-hidden rounded relative mx-auto"
+          id="modalPreviewContainer"
+        >
+          <img id="modalPreviewImg" class="object-cover w-full h-full" />
+        </div>
+
+        <div class="space-y-3 mb-4">
+          <div>
+            <label class="flex justify-between text-xs text-gray-400 mb-1"
+              ><span>Zoom</span> <span id="lblZoom">1.0x</span></label
+            >
+            <input
+              type="range"
+              id="modalZoom"
+              min="1"
+              max="3"
+              step="0.05"
+              value="1"
+              class="w-full h-1 bg-gray-600 rounded appearance-none cursor-pointer"
+            />
+          </div>
+          <div>
+            <label class="flex justify-between text-xs text-gray-400 mb-1"
+              ><span>Pan X (Horizontal)</span></label
+            >
+            <input
+              type="range"
+              id="modalPanX"
+              min="-50"
+              max="50"
+              value="0"
+              class="w-full h-1 bg-gray-600 rounded appearance-none cursor-pointer"
+            />
+          </div>
+          <div>
+            <label class="flex justify-between text-xs text-gray-400 mb-1"
+              ><span>Pan Y (Vertical)</span></label
+            >
+            <input
+              type="range"
+              id="modalPanY"
+              min="-50"
+              max="50"
+              value="0"
+              class="w-full h-1 bg-gray-600 rounded appearance-none cursor-pointer"
+            />
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button
+            id="modalRemoveBtn"
+            class="flex-1 bg-red-600/80 hover:bg-red-500 text-white py-2 rounded text-xs font-bold transition"
+          >
+            Remove
+          </button>
+          <button
+            id="modalChangeBtn"
+            class="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-2 rounded text-xs font-bold transition"
+          >
+            Change
+          </button>
+          <button
+            id="modalDoneBtn"
+            class="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-2 rounded text-xs font-bold transition"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
