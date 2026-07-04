@@ -151,6 +151,9 @@ let loadedImages = {};
 let cellSettings = {};
 let activeEditCell = null;
 
+// Shared with the export routine so the live preview and the downloaded PNG use identical spacing.
+const PADDING = 30;
+
 const ui = {
   col: document.getElementById("colInput"),
   row: document.getElementById("rowInput"),
@@ -173,7 +176,9 @@ const ui = {
   bg2: document.getElementById("bgColor2"),
   bg3: document.getElementById("bgColor3"),
   grid: document.getElementById("chartGrid"),
-  preview: document.getElementById("livePreviewContainer"),
+  viewport: document.getElementById("previewViewport"),
+  stage: document.getElementById("previewStage"),
+  footer: document.getElementById("footerWatermark"),
   tPrev: document.getElementById("titlePreview"),
   sPrev: document.getElementById("subtitlePreview"),
 };
@@ -202,27 +207,67 @@ function updateStyles() {
   // Fix: Gap successfully updating preview grid
   ui.grid.style.gap = `${ui.gap.value}px`;
 
+  // Stage renders at true (unscaled) pixel size, matching the exported canvas exactly.
+  ui.stage.style.paddingLeft = `${PADDING}px`;
+  ui.stage.style.paddingRight = `${PADDING}px`;
+  ui.tPrev.parentElement.style.marginBottom = `${PADDING}px`;
+  ui.footer.style.marginTop = `${PADDING}px`;
+
   if (ui.bgType.value === "solid") {
     ui.bg2.classList.add("hidden");
     ui.bg3.classList.add("hidden");
     ui.bgDir.classList.add("hidden");
-    ui.preview.style.background = ui.bg1.value;
+    ui.stage.style.background = ui.bg1.value;
   } else if (ui.bgType.value === "gradient2") {
     ui.bg2.classList.remove("hidden");
     ui.bg3.classList.add("hidden");
     ui.bgDir.classList.remove("hidden");
-    ui.preview.style.background = `linear-gradient(${ui.bgDir.value}, ${ui.bg1.value}, ${ui.bg2.value})`;
+    ui.stage.style.background = `linear-gradient(${ui.bgDir.value}, ${ui.bg1.value}, ${ui.bg2.value})`;
   } else {
     ui.bg2.classList.remove("hidden");
     ui.bg3.classList.remove("hidden");
     ui.bgDir.classList.remove("hidden");
-    ui.preview.style.background = `linear-gradient(${ui.bgDir.value}, ${ui.bg1.value}, ${ui.bg2.value}, ${ui.bg3.value})`;
+    ui.stage.style.background = `linear-gradient(${ui.bgDir.value}, ${ui.bg1.value}, ${ui.bg2.value}, ${ui.bg3.value})`;
   }
 
   // Update box roundness live
   document
     .querySelectorAll(".chart-cell")
     .forEach((cell) => (cell.style.borderRadius = `${ui.radius.value}px`));
+
+  updatePreviewLayout();
+}
+
+// Measures the stage at its true pixel size, then uniformly scales it to fit the
+// visible viewport so every proportion (gap, radius, font) stays exactly as drawn.
+function updatePreviewLayout() {
+  const cols = parseInt(ui.col.value) || 1;
+  const cW = parseInt(ui.w.value) || 300;
+  const gap = parseInt(ui.gap.value) || 0;
+  const gridWidth = cols * cW + (cols - 1) * gap;
+
+  // The stage's width must come ONLY from the grid dimensions. Without this,
+  // a title wider than the grid would stretch the whole box (and every cell
+  // with it) to fit the text, silently changing the actual cell size.
+  ui.stage.style.width = `${gridWidth + PADDING * 2}px`;
+
+  const trueW = ui.stage.offsetWidth;
+  const trueH = ui.stage.offsetHeight;
+  const availW = ui.viewport.clientWidth;
+  if (!trueW || !availW) return;
+
+  const scaleFactor = Math.min(1, availW / trueW);
+  const scaledW = trueW * scaleFactor;
+  const scaledH = trueH * scaleFactor;
+
+  ui.stage.style.transformOrigin = "top left";
+  ui.stage.style.transform = `scale(${scaleFactor})`;
+  ui.stage.style.left = `${(availW - scaledW) / 2}px`;
+  ui.viewport.style.height = `${scaledH}px`;
+}
+window.addEventListener("resize", updatePreviewLayout);
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(updatePreviewLayout);
 }
 
 function applyCellTransform(cellId) {
@@ -235,9 +280,15 @@ function applyCellTransform(cellId) {
 
 function renderGrid() {
   ui.grid.innerHTML = "";
-  const totalCells =
-    (parseInt(ui.col.value) || 1) * (parseInt(ui.row.value) || 1);
-  ui.grid.style.gridTemplateColumns = `repeat(${ui.col.value}, minmax(0, 1fr))`;
+  const cols = parseInt(ui.col.value) || 1;
+  const rows = parseInt(ui.row.value) || 1;
+  const cW = parseInt(ui.w.value) || 300;
+  const cH = parseInt(ui.h.value) || 300;
+  const totalCells = cols * rows;
+  // Literal pixel tracks (not fr-based) so gap/radius are always proportioned
+  // to the cell size exactly as they will be in the exported image.
+  ui.grid.style.gridTemplateColumns = `repeat(${cols}, ${cW}px)`;
+  ui.grid.style.gridAutoRows = `${cH}px`;
 
   for (let i = 0; i < totalCells; i++) {
     const cellId = `cell-${i}`;
@@ -247,7 +298,8 @@ function renderGrid() {
     const cell = document.createElement("div");
     cell.className =
       "chart-cell relative bg-neutral-900/60 border border-neutral-700/50 overflow-hidden flex items-center justify-center cursor-pointer hover:bg-neutral-800 transition group shadow-inner";
-    cell.style.aspectRatio = `${ui.w.value} / ${ui.h.value}`;
+    cell.style.width = `${cW}px`;
+    cell.style.height = `${cH}px`;
     cell.style.borderRadius = `${ui.radius.value}px`;
 
     cell.innerHTML = `
@@ -395,6 +447,36 @@ updateStyles(); // initialize gap on load
 
 // Canvas Export Logic
 // --- Canvas Export Logic ---
+
+// Greedy word-wrap matching how the (fixed-width) preview box wraps text,
+// since canvas fillText never wraps on its own.
+function wrapText(ctx, text, maxWidth) {
+  const words = text.split(" ");
+  const lines = [];
+  let current = "";
+  for (const word of words) {
+    const test = current ? `${current} ${word}` : word;
+    if (current && ctx.measureText(test).width > maxWidth) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = test;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
+// Draws text wrapped to maxWidth, distributing lines evenly across the
+// measured DOM box height so it lines up with the live preview exactly.
+function drawWrappedText(ctx, text, centerX, boxTop, boxHeight, maxWidth) {
+  const lines = wrapText(ctx, text, maxWidth);
+  const lineHeight = boxHeight / lines.length;
+  lines.forEach((line, i) => {
+    ctx.fillText(line, centerX, boxTop + lineHeight * (i + 0.5));
+  });
+}
+
 document.getElementById("exportBtn").addEventListener("click", () => {
   const cols = parseInt(ui.col.value) || 1;
   const rows = parseInt(ui.row.value) || 1;
@@ -403,19 +485,14 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   const gap = parseInt(ui.gap.value) || 0;
   const rds = parseInt(ui.radius.value) || 0;
 
-  const padding = 30;
-
-  // 1. Calculate Grid Width and Dynamic Scale
-  const tW = cols * cW + (cols - 1) * gap + padding * 2;
-
-  // Base width is roughly 1000px (3 columns). We scale text up if the chart is wider than that.
-  const scale = Math.max(1, tW / 1000);
-
-  // Scale header and footer heights so text has room
-  const headerHeight = 160 * scale;
-  const footerHeight = 60 * scale;
-  const tH =
-    headerHeight + rows * cH + (rows - 1) * gap + padding * 2 + footerHeight;
+  // Read the true (unscaled) layout straight from the live preview DOM so the
+  // export always matches it exactly, instead of recomputing positions by hand.
+  const tW = ui.stage.offsetWidth;
+  const tH = ui.stage.offsetHeight;
+  const gridLeft = ui.grid.offsetLeft;
+  const gridTop = ui.grid.offsetTop;
+  const textMaxWidth = ui.grid.offsetWidth;
+  const footerCenterY = ui.footer.offsetTop + ui.footer.offsetHeight / 2;
 
   const canvas = document.getElementById("exportCanvas");
   const ctx = canvas.getContext("2d");
@@ -459,20 +536,32 @@ document.getElementById("exportBtn").addEventListener("click", () => {
     ctx.fillRect(0, 0, tW, tH);
   }
 
-  // 3. Text (Dynamically Scaled)
+  // 3. Text (positioned at the exact same spot as the live preview)
   ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
   const cleanFontFamily = ui.font.value;
 
   ctx.fillStyle = ui.tCol.value;
-  // Multiply font size by the dynamic scale
-  const finalTitleSize = parseInt(ui.tSize.value) * 1.3 * scale;
-  ctx.font = `900 ${finalTitleSize}px ${cleanFontFamily}`;
-  ctx.fillText(ui.tIn.value, tW / 2, 75 * scale); // Scale Y position
+  ctx.font = `900 ${ui.tSize.value}px ${cleanFontFamily}`;
+  drawWrappedText(
+    ctx,
+    ui.tIn.value,
+    tW / 2,
+    ui.tPrev.offsetTop,
+    ui.tPrev.offsetHeight,
+    textMaxWidth,
+  );
 
   ctx.fillStyle = ui.sCol.value;
-  const finalSubSize = parseInt(ui.sSize.value) * 1.3 * scale;
-  ctx.font = `bold ${finalSubSize}px ${cleanFontFamily}`;
-  ctx.fillText(ui.sIn.value, tW / 2, 125 * scale); // Scale Y position
+  ctx.font = `${ui.sSize.value}px ${cleanFontFamily}`;
+  drawWrappedText(
+    ctx,
+    ui.sIn.value,
+    tW / 2,
+    ui.sPrev.offsetTop,
+    ui.sPrev.offsetHeight,
+    textMaxWidth,
+  );
 
   // 4. Grid
   const brightVal = ui.bright.value / 100;
@@ -482,15 +571,18 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       const cellId = `cell-${r * cols + c}`;
-      const x = padding + c * (cW + gap);
-      const y = headerHeight + padding + r * (cH + gap);
+      const x = gridLeft + c * (cW + gap);
+      const y = gridTop + r * (cH + gap);
 
       ctx.save();
       ctx.beginPath();
       if (ctx.roundRect) ctx.roundRect(x, y, cW, cH, rds);
       else ctx.rect(x, y, cW, cH);
-      ctx.fillStyle = "rgba(23, 23, 23, 0.4)";
+      ctx.fillStyle = "rgba(23, 23, 23, 0.6)"; // matches bg-neutral-900/60
       ctx.fill();
+      ctx.strokeStyle = "rgba(64, 64, 64, 0.5)"; // matches border-neutral-700/50
+      ctx.lineWidth = 1;
+      ctx.stroke();
       ctx.clip();
 
       if (loadedImages[cellId]) {
@@ -525,12 +617,14 @@ document.getElementById("exportBtn").addEventListener("click", () => {
     }
   }
 
-  // 5. Footer Watermark (Dynamically Scaled)
+  // 5. Footer Watermark (matches text-neutral-500 + mix-blend-difference)
   ctx.filter = "none";
-  ctx.globalAlpha = 0.3;
-  ctx.fillStyle = ui.tCol.value;
-  ctx.font = `bold ${14 * scale}px monospace`;
-  ctx.fillText("CHARTMAKER.SITE", tW / 2, tH - 25 * scale);
+  ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = "difference";
+  ctx.fillStyle = "#737373";
+  ctx.font = `10px monospace`;
+  ctx.fillText("CHARTMAKER.SITE", tW / 2, footerCenterY);
+  ctx.globalCompositeOperation = "source-over";
 
   const a = document.createElement("a");
   a.download = `custom-chart-${Date.now()}.png`;
