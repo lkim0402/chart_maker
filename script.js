@@ -136,7 +136,7 @@ const templates = {
     patternSpacing: 24,
     patternSize: 1,
     cols: 3,
-    rows: 3,
+    rows: 2,
     cellWidth: 256,
     cellHeight: 300,
   },
