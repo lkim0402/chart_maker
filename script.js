@@ -45,6 +45,9 @@ const i18n = {
     tplSongsTitle: "My Favorite Songs",
     tplSongsSub: "@ On repeat forever @",
     exportBtn: "Export PNG",
+    shareTwitterBtn: "Share to X",
+    shareBtn: "Share",
+    shareText: "I made my own custom chart with Chart Maker! 🎨✨",
     defaultTitle: "My Favorite Characters",
     defaultSub: "@ Fill in with your preferences @",
   },
@@ -93,6 +96,9 @@ const i18n = {
     tplSongsTitle: "노래 취향 모음표",
     tplSongsSub: "@ 본인 취향인 노래를 채우면 되는 표 @",
     exportBtn: "이미지 저장 (PNG)",
+    shareTwitterBtn: "X에 공유하기",
+    shareBtn: "공유하기",
+    shareText: "Chart Maker로 나만의 취향표를 만들었어요! 🎨✨",
     defaultTitle: "캐릭터 취향 모음표",
     defaultSub: "@ 본인 취향인 캐릭터를 채우면 되는 표 @",
   },
@@ -849,7 +855,9 @@ function drawPatternTile(type, color, opacity, spacing, shapeSize) {
   return tile;
 }
 
-document.getElementById("exportBtn").addEventListener("click", () => {
+// Draws the chart to #exportCanvas and returns it, so both the download
+// button and the share button can produce the exact same PNG.
+function renderChartToCanvas() {
   const cols = parseInt(ui.col.value) || 1;
   const rows = parseInt(ui.row.value) || 1;
   const cW = parseInt(ui.w.value) || 300;
@@ -1019,8 +1027,54 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   ctx.fillText("CHARTMAKER.SITE", tW / 2, footerCenterY);
   ctx.globalCompositeOperation = "source-over";
 
+  return canvas;
+}
+
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const canvas = renderChartToCanvas();
   const a = document.createElement("a");
   a.download = `custom-chart-${Date.now()}.png`;
   a.href = canvas.toDataURL("image/png");
   a.click();
 });
+
+const SHARE_URL = "https://chartmaker.site";
+
+document.getElementById("shareTwitterBtn").addEventListener("click", () => {
+  const text = encodeURIComponent(i18n[currentLang].shareText);
+  const hashtags = "ChartMaker,BiasChart";
+  const url = encodeURIComponent(SHARE_URL);
+  window.open(
+    `https://twitter.com/intent/tweet?text=${text}&hashtags=${hashtags}&url=${url}`,
+    "_blank",
+    "noopener,noreferrer,width=550,height=420",
+  );
+});
+
+// Native share sheet (mobile Chrome/Safari, some desktop browsers) lets users
+// pick any installed app - Instagram, KakaoTalk, Discord, etc. - and, where
+// file sharing is supported, attaches the actual chart image rather than
+// just a link, unlike Twitter's web intent which can't carry an image.
+const shareNativeBtn = document.getElementById("shareNativeBtn");
+if (navigator.share) {
+  shareNativeBtn.classList.remove("hidden");
+  shareNativeBtn.classList.add("flex");
+  shareNativeBtn.addEventListener("click", async () => {
+    const canvas = renderChartToCanvas();
+    const shareData = { title: "Chart Maker", text: i18n[currentLang].shareText, url: SHARE_URL };
+
+    canvas.toBlob(async (blob) => {
+      const file = blob && new File([blob], "custom-chart.png", { type: "image/png" });
+      const withFile = file ? { ...shareData, files: [file] } : shareData;
+      try {
+        if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share(withFile);
+        } else {
+          await navigator.share(shareData);
+        }
+      } catch (err) {
+        // User cancelled the share sheet - nothing to do.
+      }
+    }, "image/png");
+  });
+}
