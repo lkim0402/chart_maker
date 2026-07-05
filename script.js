@@ -264,6 +264,11 @@ let activeEditCell = null;
 // Shared with the export routine so the live preview and the downloaded PNG use identical spacing.
 const PADDING = 30;
 
+// Default title/subtitle sizes every template (including the initial no-template
+// state) resets to, so switching templates gives a consistent, legible result.
+const DEFAULT_TITLE_SIZE = 55;
+const DEFAULT_SUBTITLE_SIZE = 28;
+
 const ui = {
   col: document.getElementById("colInput"),
   row: document.getElementById("rowInput"),
@@ -702,6 +707,8 @@ document.querySelectorAll(".template-btn").forEach((btn) => {
     ui.font.value = t.font;
     ui.tIn.value = i18n[currentLang][t.titleKey];
     ui.sIn.value = i18n[currentLang][t.subKey];
+    ui.tSize.value = DEFAULT_TITLE_SIZE;
+    ui.sSize.value = DEFAULT_SUBTITLE_SIZE;
     ui.tCol.value = t.titleColor;
     ui.sCol.value = t.subtitleColor;
     ui.bgType.value = t.bgType;
@@ -970,7 +977,7 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   ctx.globalAlpha = 1;
   ctx.globalCompositeOperation = "difference";
   ctx.fillStyle = "#ffffff";
-  ctx.font = `14px monospace`;
+  ctx.font = `20px monospace`;
   ctx.fillText("CHARTMAKER.SITE", tW / 2, footerCenterY);
   ctx.globalCompositeOperation = "source-over";
 
