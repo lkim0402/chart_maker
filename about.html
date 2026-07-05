@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About - Chart Maker</title>
+    <meta
+      name="description"
+      content="What Chart Maker is and how to use it to build custom bias charts, favorites grids, and photo collages."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://chartmaker.site/about.html" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body
+    class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center px-4 sm:px-6 pb-4 sm:pb-6 pt-20 transition-colors duration-300"
+  >
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur border-b border-gray-800 px-4 sm:px-6 h-12 flex items-center justify-between"
+    >
+      <a
+        href="/"
+        class="text-sm font-extrabold text-white hover:text-blue-400 transition"
+        data-i18n="navHome"
+        >✨ Chart Maker</a
+      >
+      <div class="flex items-center gap-2 sm:gap-4">
+        <a
+          href="/about.html"
+          class="text-[11px] sm:text-xs text-white transition"
+          data-i18n="navAbout"
+          >About</a
+        >
+        <a
+          href="/faq.html"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
+          data-i18n="navFaq"
+          >FAQ</a
+        >
+        <a
+          href="/privacy.html"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
+          data-i18n="navPrivacy"
+          >Privacy</a
+        >
+        <button
+          id="langToggle"
+          class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 sm:px-3 py-1.5 rounded text-[11px] sm:text-xs font-bold transition"
+        >
+          🌐 EN / KR
+        </button>
+      </div>
+    </nav>
+
+    <div class="w-full max-w-3xl">
+      <h1 class="text-2xl font-extrabold text-white mb-6 mt-2" data-i18n="pageTitle">
+        About Chart Maker
+      </h1>
+
+      <div
+        class="bg-gray-800/40 border border-gray-700 rounded-xl p-6 sm:p-8 text-sm leading-relaxed text-gray-300 space-y-6"
+      >
+        <div>
+          <h2 class="text-base font-bold text-white mb-2" data-i18n="aboutHeading">
+            What is Chart Maker?
+          </h2>
+          <p data-i18n="aboutP1">
+            Chart Maker is a free browser-based tool for building custom bias
+            charts, favorites grids, and photo collages - the kind of grid
+            layouts popular in K-pop and anime fandoms for showcasing your
+            favorite characters, idols, games, or songs. No design software or
+            account required: everything runs directly in your browser, and
+            your photos never leave your device.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-base font-bold text-white mb-2" data-i18n="howHeading">
+            How to Use It
+          </h2>
+          <ol class="list-decimal list-inside space-y-1">
+            <li data-i18n="how1">
+              Pick a ready-made template, or start from the default layout.
+            </li>
+            <li data-i18n="how2">Set your grid's columns, rows, and cell size.</li>
+            <li data-i18n="how3">
+              Click any cell to upload a photo, then pan and zoom it into
+              place.
+            </li>
+            <li data-i18n="how4">
+              Customize the title, fonts, colors, background, and patterns.
+            </li>
+            <li data-i18n="how5">
+              Export your finished chart as a PNG, or share it straight to X.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <footer
+      class="w-full max-w-3xl mt-10 border-t border-gray-800 py-6 text-center text-xs text-gray-500"
+    >
+      <a href="/about.html" class="hover:text-gray-300 underline mx-2" data-i18n="navAbout"
+        >About</a
+      >
+      <a href="/faq.html" class="hover:text-gray-300 underline mx-2" data-i18n="navFaq"
+        >FAQ</a
+      >
+      <a
+        href="/privacy.html"
+        class="hover:text-gray-300 underline mx-2"
+        data-i18n="privacyLink"
+        >Privacy Policy</a
+      >
+    </footer>
+
+    <script>
+      const i18n = {
+        en: {
+          navHome: "✨ Chart Maker",
+          navAbout: "About",
+          navFaq: "FAQ",
+          navPrivacy: "Privacy",
+          privacyLink: "Privacy Policy",
+          pageTitle: "About Chart Maker",
+          aboutHeading: "What is Chart Maker?",
+          aboutP1:
+            "Chart Maker is a free browser-based tool for building custom bias charts, favorites grids, and photo collages - the kind of grid layouts popular in K-pop and anime fandoms for showcasing your favorite characters, idols, games, or songs. No design software or account required: everything runs directly in your browser, and your photos never leave your device.",
+          howHeading: "How to Use It",
+          how1: "Pick a ready-made template, or start from the default layout.",
+          how2: "Set your grid's columns, rows, and cell size.",
+          how3: "Click any cell to upload a photo, then pan and zoom it into place.",
+          how4: "Customize the title, fonts, colors, background, and patterns.",
+          how5: "Export your finished chart as a PNG, or share it straight to X.",
+        },
+        ko: {
+          navHome: "✨ 차트 메이커",
+          navAbout: "소개",
+          navFaq: "FAQ",
+          navPrivacy: "개인정보",
+          privacyLink: "개인정보처리방침",
+          pageTitle: "차트 메이커 소개",
+          aboutHeading: "차트 메이커란?",
+          aboutP1:
+            "차트 메이커는 취향표, 최애 모음 그리드, 포토 콜라주를 무료로 만들 수 있는 브라우저 기반 도구입니다. K-pop과 애니메이션 팬덤에서 인기 있는 그리드 레이아웃으로, 좋아하는 캐릭터, 아이돌, 게임, 노래를 소개할 때 많이 사용됩니다. 디자인 프로그램이나 계정 없이 브라우저에서 바로 실행되며, 업로드한 사진은 기기 밖으로 전송되지 않습니다.",
+          howHeading: "사용 방법",
+          how1: "미리 만들어진 템플릿을 선택하거나 기본 레이아웃에서 시작하세요.",
+          how2: "그리드의 열, 행, 칸 크기를 설정하세요.",
+          how3: "칸을 클릭해 사진을 업로드하고, 위치와 확대/축소를 조정하세요.",
+          how4: "제목, 글꼴, 색상, 배경, 패턴을 원하는 대로 꾸며보세요.",
+          how5: "완성된 차트를 PNG로 저장하거나 X에 바로 공유하세요.",
+        },
+      };
+
+      let currentLang = navigator.language.startsWith("ko") ? "ko" : "en";
+
+      function applyTranslations() {
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (i18n[currentLang][key]) el.innerText = i18n[currentLang][key];
+        });
+      }
+
+      document.getElementById("langToggle").addEventListener("click", () => {
+        currentLang = currentLang === "en" ? "ko" : "en";
+        applyTranslations();
+      });
+
+      applyTranslations();
+    </script>
+  </body>
+</html>

@@ -4,6 +4,7 @@ const i18n = {
     mainTitle: "✨ Advanced Chart Maker",
     mainDesc:
       "Adjust layouts, pan/zoom images, and drag numbers to customize your chart.",
+    navHome: "✨ Chart Maker",
     navAbout: "About",
     navFaq: "FAQ",
     navPrivacy: "Privacy",
@@ -78,6 +79,7 @@ const i18n = {
     mainTitle: "✨ 고급 취향표 메이커",
     mainDesc:
       "마우스 휠이나 드래그로 수치를 조정하고, 이미지를 세밀하게 편집하세요.",
+    navHome: "✨ 차트 메이커",
     navAbout: "소개",
     navFaq: "FAQ",
     navPrivacy: "개인정보",

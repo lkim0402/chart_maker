@@ -45,31 +45,46 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body
-    class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center p-4 sm:p-6 transition-colors duration-300"
+    class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center px-4 sm:px-6 pb-4 sm:pb-6 pt-20 transition-colors duration-300"
   >
-    <header class="w-full max-w-[1600px] text-center mb-6 relative">
-      <nav
-        class="absolute left-0 top-0 flex items-center gap-3 text-xs text-gray-400 h-[30px]"
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur border-b border-gray-800 px-4 sm:px-6 h-12 flex items-center justify-between"
+    >
+      <a
+        href="/"
+        class="text-sm font-extrabold text-white hover:text-blue-400 transition"
+        data-i18n="navHome"
+        >✨ Chart Maker</a
       >
-        <a href="#about" class="hover:text-white transition" data-i18n="navAbout"
+      <div class="flex items-center gap-2 sm:gap-4">
+        <a
+          href="/about.html"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
+          data-i18n="navAbout"
           >About</a
         >
-        <a href="#faq" class="hover:text-white transition" data-i18n="navFaq"
+        <a
+          href="/faq.html"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
+          data-i18n="navFaq"
           >FAQ</a
         >
         <a
           href="/privacy.html"
-          class="hover:text-white transition"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
           data-i18n="navPrivacy"
           >Privacy</a
         >
-      </nav>
-      <button
-        id="langToggle"
-        class="absolute right-0 top-0 bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded text-xs font-bold transition"
-      >
-        🌐 EN / KR
-      </button>
+        <button
+          id="langToggle"
+          class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 sm:px-3 py-1.5 rounded text-[11px] sm:text-xs font-bold transition"
+        >
+          🌐 EN / KR
+        </button>
+      </div>
+    </nav>
+
+    <header class="w-full max-w-[1600px] text-center mb-6">
       <h1 class="text-2xl font-extrabold text-white mb-1" data-i18n="mainTitle">
         ✨ Advanced Custom Chart Maker
       </h1>
@@ -652,91 +667,19 @@
       </div>
     </div>
 
-    <!-- About / How-to / FAQ: real written content, not just the tool controls -->
-    <section
-      id="about"
-      class="w-full max-w-[900px] mx-auto mt-10 px-4 text-gray-300 scroll-mt-6"
+    <footer
+      class="w-full max-w-[900px] mx-auto mt-10 border-t border-gray-800 py-6 text-center text-xs text-gray-500"
     >
-      <div class="border-t border-gray-800 pt-8">
-        <h2 class="text-lg font-bold text-white mb-3" data-i18n="aboutHeading">
-          What is Chart Maker?
-        </h2>
-        <p class="text-sm leading-relaxed mb-6" data-i18n="aboutP1">
-          Chart Maker is a free browser-based tool for building custom bias
-          charts, favorites grids, and photo collages - the kind of grid
-          layouts popular in K-pop and anime fandoms for showcasing your
-          favorite characters, idols, games, or songs. No design software or
-          account required: everything runs directly in your browser, and
-          your photos never leave your device.
-        </p>
-
-        <h2 class="text-lg font-bold text-white mb-3" data-i18n="howHeading">
-          How to Use It
-        </h2>
-        <ol class="text-sm leading-relaxed mb-6 list-decimal list-inside space-y-1">
-          <li data-i18n="how1">
-            Pick a ready-made template, or start from the default layout.
-          </li>
-          <li data-i18n="how2">
-            Set your grid's columns, rows, and cell size.
-          </li>
-          <li data-i18n="how3">
-            Click any cell to upload a photo, then pan and zoom it into
-            place.
-          </li>
-          <li data-i18n="how4">
-            Customize the title, fonts, colors, background, and patterns.
-          </li>
-          <li data-i18n="how5">
-            Export your finished chart as a PNG, or share it straight to X.
-          </li>
-        </ol>
-
-        <h2
-          id="faq"
-          class="text-lg font-bold text-white mb-3 scroll-mt-6"
-          data-i18n="faqHeading"
-        >
-          Frequently Asked Questions
-        </h2>
-        <div class="space-y-4 mb-8">
-          <div>
-            <p class="text-sm font-semibold text-white" data-i18n="faq1Q">
-              What is a bias chart?
-            </p>
-            <p class="text-sm leading-relaxed" data-i18n="faq1A">
-              A bias chart is a grid-style graphic ranking or showcasing your
-              favorite characters, idols, or other picks, popularized by
-              K-pop and anime fandoms for sharing on social media.
-            </p>
-          </div>
-          <div>
-            <p class="text-sm font-semibold text-white" data-i18n="faq2Q">
-              Is Chart Maker free to use?
-            </p>
-            <p class="text-sm leading-relaxed" data-i18n="faq2A">
-              Yes. Chart Maker is completely free, with no sign-up or account
-              needed.
-            </p>
-          </div>
-          <div>
-            <p class="text-sm font-semibold text-white" data-i18n="faq3Q">
-              Can I use my own photos?
-            </p>
-            <p class="text-sm leading-relaxed" data-i18n="faq3A">
-              Yes. Click any cell in the grid to upload a photo, then adjust
-              its zoom and position to fit exactly how you want.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <footer class="border-t border-gray-800 py-6 text-center text-xs text-gray-500">
-        <a href="/privacy.html" class="hover:text-gray-300 underline" data-i18n="privacyLink"
-          >Privacy Policy</a
-        >
-      </footer>
-    </section>
+      <a href="/about.html" class="hover:text-gray-300 underline mx-2" data-i18n="navAbout"
+        >About</a
+      >
+      <a href="/faq.html" class="hover:text-gray-300 underline mx-2" data-i18n="navFaq"
+        >FAQ</a
+      >
+      <a href="/privacy.html" class="hover:text-gray-300 underline mx-2" data-i18n="privacyLink"
+        >Privacy Policy</a
+      >
+    </footer>
 
     <canvas id="exportCanvas" class="hidden"></canvas>
 

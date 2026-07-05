@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FAQ - Chart Maker</title>
+    <meta
+      name="description"
+      content="Frequently asked questions about Chart Maker: what a bias chart is, whether it's free, and using your own photos."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://chartmaker.site/faq.html" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body
+    class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center px-4 sm:px-6 pb-4 sm:pb-6 pt-20 transition-colors duration-300"
+  >
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur border-b border-gray-800 px-4 sm:px-6 h-12 flex items-center justify-between"
+    >
+      <a
+        href="/"
+        class="text-sm font-extrabold text-white hover:text-blue-400 transition"
+        data-i18n="navHome"
+        >✨ Chart Maker</a
+      >
+      <div class="flex items-center gap-2 sm:gap-4">
+        <a
+          href="/about.html"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
+          data-i18n="navAbout"
+          >About</a
+        >
+        <a
+          href="/faq.html"
+          class="text-[11px] sm:text-xs text-white transition"
+          data-i18n="navFaq"
+          >FAQ</a
+        >
+        <a
+          href="/privacy.html"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
+          data-i18n="navPrivacy"
+          >Privacy</a
+        >
+        <button
+          id="langToggle"
+          class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 sm:px-3 py-1.5 rounded text-[11px] sm:text-xs font-bold transition"
+        >
+          🌐 EN / KR
+        </button>
+      </div>
+    </nav>
+
+    <div class="w-full max-w-3xl">
+      <h1 class="text-2xl font-extrabold text-white mb-6 mt-2" data-i18n="pageTitle">
+        Frequently Asked Questions
+      </h1>
+
+      <div
+        class="bg-gray-800/40 border border-gray-700 rounded-xl p-6 sm:p-8 text-sm leading-relaxed text-gray-300 space-y-5"
+      >
+        <div>
+          <p class="text-white font-semibold mb-1" data-i18n="faq1Q">
+            What is a bias chart?
+          </p>
+          <p data-i18n="faq1A">
+            A bias chart is a grid-style graphic ranking or showcasing your
+            favorite characters, idols, or other picks, popularized by K-pop
+            and anime fandoms for sharing on social media.
+          </p>
+        </div>
+        <div>
+          <p class="text-white font-semibold mb-1" data-i18n="faq2Q">
+            Is Chart Maker free to use?
+          </p>
+          <p data-i18n="faq2A">
+            Yes. Chart Maker is completely free, with no sign-up or account
+            needed.
+          </p>
+        </div>
+        <div>
+          <p class="text-white font-semibold mb-1" data-i18n="faq3Q">
+            Can I use my own photos?
+          </p>
+          <p data-i18n="faq3A">
+            Yes. Click any cell in the grid to upload a photo, then adjust its
+            zoom and position to fit exactly how you want.
+          </p>
+        </div>
+        <div>
+          <p class="text-white font-semibold mb-1" data-i18n="faq4Q">
+            Do you store my photos or chart data?
+          </p>
+          <p>
+            <span data-i18n="faq4A_pre"
+              >No. Everything is processed entirely in your browser and never
+              uploaded to any server. See our </span
+            ><a
+              href="/privacy.html"
+              class="text-blue-400 hover:text-blue-300 underline"
+              data-i18n="privacyLink"
+              >Privacy Policy</a
+            ><span data-i18n="faq4A_post"> for details.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <footer
+      class="w-full max-w-3xl mt-10 border-t border-gray-800 py-6 text-center text-xs text-gray-500"
+    >
+      <a href="/about.html" class="hover:text-gray-300 underline mx-2" data-i18n="navAbout"
+        >About</a
+      >
+      <a href="/faq.html" class="hover:text-gray-300 underline mx-2" data-i18n="navFaq"
+        >FAQ</a
+      >
+      <a
+        href="/privacy.html"
+        class="hover:text-gray-300 underline mx-2"
+        data-i18n="privacyLink"
+        >Privacy Policy</a
+      >
+    </footer>
+
+    <script>
+      const i18n = {
+        en: {
+          navHome: "✨ Chart Maker",
+          navAbout: "About",
+          navFaq: "FAQ",
+          navPrivacy: "Privacy",
+          privacyLink: "Privacy Policy",
+          pageTitle: "Frequently Asked Questions",
+          faq1Q: "What is a bias chart?",
+          faq1A:
+            "A bias chart is a grid-style graphic ranking or showcasing your favorite characters, idols, or other picks, popularized by K-pop and anime fandoms for sharing on social media.",
+          faq2Q: "Is Chart Maker free to use?",
+          faq2A: "Yes. Chart Maker is completely free, with no sign-up or account needed.",
+          faq3Q: "Can I use my own photos?",
+          faq3A:
+            "Yes. Click any cell in the grid to upload a photo, then adjust its zoom and position to fit exactly how you want.",
+          faq4Q: "Do you store my photos or chart data?",
+          faq4A_pre:
+            "No. Everything is processed entirely in your browser and never uploaded to any server. See our ",
+          faq4A_post: " for details.",
+        },
+        ko: {
+          navHome: "✨ 차트 메이커",
+          navAbout: "소개",
+          navFaq: "FAQ",
+          navPrivacy: "개인정보",
+          privacyLink: "개인정보처리방침",
+          pageTitle: "자주 묻는 질문",
+          faq1Q: "취향표(bias chart)가 뭔가요?",
+          faq1A:
+            "취향표는 좋아하는 캐릭터나 아이돌 등을 그리드 형태로 보여주는 그래픽으로, K-pop과 애니메이션 팬덤에서 SNS에 공유하기 위해 널리 사용됩니다.",
+          faq2Q: "차트 메이커는 무료인가요?",
+          faq2A: "네, 차트 메이커는 회원가입 없이 완전히 무료로 이용할 수 있습니다.",
+          faq3Q: "제 사진을 사용할 수 있나요?",
+          faq3A:
+            "네, 그리드의 칸을 클릭해 사진을 업로드한 후 원하는 대로 확대/축소와 위치를 조정할 수 있습니다.",
+          faq4Q: "제 사진이나 차트 데이터를 저장하나요?",
+          faq4A_pre:
+            "아니요. 모든 데이터는 브라우저 내에서만 처리되며 서버에 업로드되지 않습니다. 자세한 내용은 ",
+          faq4A_post: "을 참고하세요.",
+        },
+      };
+
+      let currentLang = navigator.language.startsWith("ko") ? "ko" : "en";
+
+      function applyTranslations() {
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (i18n[currentLang][key]) el.innerText = i18n[currentLang][key];
+        });
+      }
+
+      document.getElementById("langToggle").addEventListener("click", () => {
+        currentLang = currentLang === "en" ? "ko" : "en";
+        applyTranslations();
+      });
+
+      applyTranslations();
+    </script>
+  </body>
+</html>
