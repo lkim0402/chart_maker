@@ -135,6 +135,10 @@ const templates = {
     patternOpacity: 25,
     patternSpacing: 24,
     patternSize: 1,
+    cols: 3,
+    rows: 3,
+    cellWidth: 256,
+    cellHeight: 300,
   },
   media: {
     font: "'Do Hyeon', sans-serif",
@@ -146,6 +150,10 @@ const templates = {
     bg1: "#000000",
     bg2: "#422006",
     bgDir: "to bottom",
+    cols: 3,
+    rows: 3,
+    cellWidth: 256,
+    cellHeight: 300,
     pattern: "diamond",
     patternColor: "#fde68a",
     patternOpacity: 15,
@@ -733,6 +741,11 @@ document.querySelectorAll(".template-btn").forEach((btn) => {
     ui.patternOpacity.value = t.patternOpacity;
     ui.patternSpacing.value = t.patternSpacing;
     ui.patternSize.value = t.patternSize;
+    if (t.cols) ui.col.value = t.cols;
+    if (t.rows) ui.row.value = t.rows;
+    if (t.cellWidth) ui.w.value = t.cellWidth;
+    if (t.cellHeight) ui.h.value = t.cellHeight;
+    renderGrid();
     updateStyles();
     markActiveTemplateButton();
   });
