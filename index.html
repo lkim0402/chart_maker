@@ -367,10 +367,12 @@
                   Stripes
                 </option>
                 <option value="dots" data-i18n="patternDots">Dots</option>
-                <option value="stars" data-i18n="patternStars">Stars</option>
+                <option value="diamond" data-i18n="patternDiamond">
+                  Diamond
+                </option>
                 <option value="grid" data-i18n="patternGrid">Grid</option>
               </select>
-              <div class="flex gap-2 items-center">
+              <div class="flex gap-2 items-center mb-1">
                 <input
                   type="color"
                   id="patternColor"
@@ -388,6 +390,20 @@
                   title="Pattern Opacity"
                 />
               </div>
+              <label
+                class="flex justify-between text-[10px] text-gray-400 mb-1"
+                data-i18n="patternSpacingLabel"
+                ><span>Pattern Spacing</span></label
+              >
+              <input
+                type="range"
+                id="patternSpacing"
+                min="10"
+                max="80"
+                value="24"
+                class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                title="Pattern Spacing"
+              />
             </div>
 
             <div class="h-px bg-gray-700 my-1"></div>

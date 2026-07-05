@@ -27,8 +27,9 @@ const i18n = {
     patternNone: "None",
     patternStripes: "Stripes",
     patternDots: "Dots",
-    patternStars: "Stars",
+    patternDiamond: "Diamond",
     patternGrid: "Grid",
+    patternSpacingLabel: "Pattern Spacing",
     secTemplates: "Templates",
     tplCharacters: "Characters",
     tplGames: "Games",
@@ -71,8 +72,9 @@ const i18n = {
     patternNone: "없음",
     patternStripes: "줄무늬",
     patternDots: "물방울",
-    patternStars: "별",
+    patternDiamond: "다이아몬드",
     patternGrid: "격자",
+    patternSpacingLabel: "패턴 간격",
     secTemplates: "템플릿",
     tplCharacters: "캐릭터",
     tplGames: "게임",
@@ -105,6 +107,7 @@ const templates = {
     pattern: "none",
     patternColor: "#ffffff",
     patternOpacity: 25,
+    patternSpacing: 24,
   },
   games: {
     font: "'Black Han Sans', sans-serif",
@@ -119,6 +122,7 @@ const templates = {
     pattern: "grid",
     patternColor: "#a78bfa",
     patternOpacity: 25,
+    patternSpacing: 24,
   },
   media: {
     font: "'Do Hyeon', sans-serif",
@@ -130,9 +134,10 @@ const templates = {
     bg1: "#000000",
     bg2: "#422006",
     bgDir: "to bottom",
-    pattern: "stars",
+    pattern: "diamond",
     patternColor: "#fde68a",
     patternOpacity: 60,
+    patternSpacing: 36,
   },
   songs: {
     font: "'Gowun Dodum', sans-serif",
@@ -147,6 +152,7 @@ const templates = {
     pattern: "dots",
     patternColor: "#be185d",
     patternOpacity: 20,
+    patternSpacing: 18,
   },
 };
 
@@ -276,6 +282,7 @@ const ui = {
   patternType: document.getElementById("patternType"),
   patternColor: document.getElementById("patternColor"),
   patternOpacity: document.getElementById("patternOpacity"),
+  patternSpacing: document.getElementById("patternSpacing"),
   grid: document.getElementById("chartGrid"),
   viewport: document.getElementById("previewViewport"),
   stage: document.getElementById("previewStage"),
@@ -292,8 +299,12 @@ const mPanX = document.getElementById("modalPanX");
 const mPanY = document.getElementById("modalPanY");
 
 // --- Pattern Overlays ---
-// Patterns are pure CSS/canvas (gradients + one inline SVG tile for stars) so no
-// image assets are ever required, and they stay crisp at any grid size.
+// Patterns are inline SVG data-URI tiles (no image assets needed) rather than
+// live CSS gradients: a repeating hard-edge gradient (color 1px, transparent 1px)
+// gets anti-aliased away to nothing once the live preview is scaled down by
+// updatePreviewLayout's transform, since it's rasterized as a resolution-dependent
+// gradient rather than a bitmap. An SVG image tile downsamples like a normal
+// image instead, so it stays visible (and crisp) at any preview scale.
 function hexToRgba(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
@@ -301,42 +312,37 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-function starsPatternImage(color, opacity) {
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><g fill='${color}' fill-opacity='${opacity}'><path d='M10 2 L12.5 8 L19 8 L13.8 12 L15.8 18.5 L10 14.5 L4.2 18.5 L6.2 12 L1 8 L7.5 8 Z'/><path d='M42 22 L43.2 25.5 L47 25.5 L44 27.8 L45.2 31.5 L42 29.2 L38.8 31.5 L40 27.8 L37 25.5 L40.8 25.5 Z'/><path d='M22 40 L23.4 44 L27.5 44 L24.2 46.5 L25.5 50.5 L22 48 L18.5 50.5 L19.8 46.5 L16.5 44 L20.6 44 Z'/></g></svg>`;
+function svgTileUrl(size, inner) {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}' viewBox='0 0 ${size} ${size}'>${inner}</svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
 // Returns an array of {image, size} background layers (CSS multi-background),
 // listed topmost-first so they paint on top of whatever's beneath them.
-function getPatternLayers(type, color, opacity) {
-  const c = hexToRgba(color, opacity);
+// `spacing` is the tile period in px, i.e. how far apart repeats land.
+function getPatternLayers(type, color, opacity, spacing) {
+  const s = spacing;
   if (type === "stripes") {
-    return [
-      {
-        image: `repeating-linear-gradient(45deg, ${c} 0px, ${c} 2px, transparent 2px, transparent 12px)`,
-        size: "auto",
-      },
-    ];
+    const w = Math.max(1, s * 0.08);
+    const inner = `<g stroke='${color}' stroke-opacity='${opacity}' stroke-width='${w}'><line x1='0' y1='${s}' x2='${s}' y2='0'/><line x1='${-s / 2}' y1='${s / 2}' x2='${s / 2}' y2='${-s / 2}'/><line x1='${s / 2}' y1='${s * 1.5}' x2='${s * 1.5}' y2='${s / 2}'/></g>`;
+    return [{ image: svgTileUrl(s, inner), size: `${s}px ${s}px` }];
   }
   if (type === "dots") {
-    return [
-      {
-        image: `radial-gradient(${c} 1.5px, transparent 1.5px)`,
-        size: "18px 18px",
-      },
-    ];
+    const r = Math.max(1, s * 0.08);
+    const inner = `<circle cx='${s / 2}' cy='${s / 2}' r='${r}' fill='${color}' fill-opacity='${opacity}'/>`;
+    return [{ image: svgTileUrl(s, inner), size: `${s}px ${s}px` }];
   }
   if (type === "grid") {
-    return [
-      { image: `linear-gradient(${c} 1px, transparent 1px)`, size: "24px 24px" },
-      {
-        image: `linear-gradient(90deg, ${c} 1px, transparent 1px)`,
-        size: "24px 24px",
-      },
-    ];
+    const w = Math.max(1, s * 0.045);
+    const inner = `<g stroke='${color}' stroke-opacity='${opacity}' stroke-width='${w}'><line x1='0' y1='0' x2='${s}' y2='0'/><line x1='0' y1='0' x2='0' y2='${s}'/></g>`;
+    return [{ image: svgTileUrl(s, inner), size: `${s}px ${s}px` }];
   }
-  if (type === "stars") {
-    return [{ image: starsPatternImage(color, opacity), size: "60px 60px" }];
+  if (type === "diamond") {
+    const r = s * 0.28;
+    const cx = s / 2,
+      cy = s / 2;
+    const inner = `<polygon points='${cx},${cy - r} ${cx + r},${cy} ${cx},${cy + r} ${cx - r},${cy}' fill='${color}' fill-opacity='${opacity}'/>`;
+    return [{ image: svgTileUrl(s, inner), size: `${s}px ${s}px` }];
   }
   return [];
 }
@@ -386,6 +392,7 @@ function updateStyles() {
     ui.patternType.value,
     ui.patternColor.value,
     ui.patternOpacity.value / 100,
+    parseInt(ui.patternSpacing.value) || 24,
   );
   if (ui.bgType.value === "gradient2") {
     layers.push({
@@ -602,6 +609,7 @@ const interactiveControls = [
   ui.patternType,
   ui.patternColor,
   ui.patternOpacity,
+  ui.patternSpacing,
   ui.font,
   ui.radius,
   ui.gap,
@@ -639,6 +647,7 @@ document.querySelectorAll(".template-btn").forEach((btn) => {
     ui.patternType.value = t.pattern;
     ui.patternColor.value = t.patternColor;
     ui.patternOpacity.value = t.patternOpacity;
+    ui.patternSpacing.value = t.patternSpacing;
     updateStyles();
   });
 });
@@ -679,24 +688,22 @@ function drawWrappedText(ctx, text, centerX, boxTop, boxHeight, maxWidth) {
   });
 }
 
-// Draws a 5-point star centered at (cx, cy) onto a canvas context.
-function drawStar(ctx, cx, cy, outerR, innerR, rotation = 0) {
+// Draws a diamond (rotated square) centered at (cx, cy) onto a canvas context.
+function drawDiamond(ctx, cx, cy, r) {
   ctx.beginPath();
-  for (let i = 0; i < 10; i++) {
-    const r = i % 2 === 0 ? outerR : innerR;
-    const angle = rotation + (Math.PI / 5) * i - Math.PI / 2;
-    const x = cx + r * Math.cos(angle);
-    const y = cy + r * Math.sin(angle);
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  }
+  ctx.moveTo(cx, cy - r);
+  ctx.lineTo(cx + r, cy);
+  ctx.lineTo(cx, cy + r);
+  ctx.lineTo(cx - r, cy);
   ctx.closePath();
   ctx.fill();
 }
 
 // Builds one repeatable tile matching the CSS pattern layer for the same type,
 // so ctx.createPattern(tile, "repeat") reproduces the live preview exactly.
-function drawPatternTile(type, color, opacity) {
-  const size = type === "stripes" ? 12 : type === "dots" ? 18 : type === "grid" ? 24 : 60;
+// `spacing` is the tile period in px, matching getPatternLayers' `spacing` param.
+function drawPatternTile(type, color, opacity, spacing) {
+  const size = spacing;
   const tile = document.createElement("canvas");
   tile.width = size;
   tile.height = size;
@@ -705,7 +712,7 @@ function drawPatternTile(type, color, opacity) {
 
   if (type === "stripes") {
     tctx.strokeStyle = c;
-    tctx.lineWidth = 2;
+    tctx.lineWidth = Math.max(1, size * 0.08);
     tctx.beginPath();
     tctx.moveTo(-2, size + 2);
     tctx.lineTo(size + 2, -2);
@@ -715,22 +722,20 @@ function drawPatternTile(type, color, opacity) {
   } else if (type === "dots") {
     tctx.fillStyle = c;
     tctx.beginPath();
-    tctx.arc(size / 2, size / 2, 1.5, 0, Math.PI * 2);
+    tctx.arc(size / 2, size / 2, Math.max(1, size * 0.08), 0, Math.PI * 2);
     tctx.fill();
   } else if (type === "grid") {
     tctx.strokeStyle = c;
-    tctx.lineWidth = 1;
+    tctx.lineWidth = Math.max(1, size * 0.045);
     tctx.beginPath();
     tctx.moveTo(0, 0.5);
     tctx.lineTo(size, 0.5);
     tctx.moveTo(0.5, 0);
     tctx.lineTo(0.5, size);
     tctx.stroke();
-  } else if (type === "stars") {
+  } else if (type === "diamond") {
     tctx.fillStyle = c;
-    drawStar(tctx, 10, 8, 5, 2.3);
-    drawStar(tctx, 42, 22, 3.5, 1.6);
-    drawStar(tctx, 22, 46, 4.5, 2);
+    drawDiamond(tctx, size / 2, size / 2, size * 0.28);
   }
   return tile;
 }
@@ -802,6 +807,7 @@ document.getElementById("exportBtn").addEventListener("click", () => {
       patType,
       ui.patternColor.value,
       ui.patternOpacity.value / 100,
+      parseInt(ui.patternSpacing.value) || 24,
     );
     ctx.fillStyle = ctx.createPattern(tile, "repeat");
     ctx.fillRect(0, 0, tW, tH);
