@@ -17,6 +17,10 @@ const i18n = {
     fontLabel: "Font Family",
     brightLabel: "Brightness",
     opacLabel: "Opacity",
+    textAlignLabel: "Text Alignment",
+    alignLeft: "Left",
+    alignCenter: "Center",
+    alignRight: "Right",
     mainTitleLabel: "Main Title",
     subTitleLabel: "Subtitle",
     bgTypeLabel: "Background Type",
@@ -63,6 +67,10 @@ const i18n = {
     fontLabel: "글꼴 (Font)",
     brightLabel: "밝기",
     opacLabel: "투명도",
+    textAlignLabel: "텍스트 정렬",
+    alignLeft: "왼쪽",
+    alignCenter: "가운데",
+    alignRight: "오른쪽",
     mainTitleLabel: "메인 타이틀",
     subTitleLabel: "서브타이틀",
     bgTypeLabel: "배경 유형",
@@ -113,7 +121,7 @@ const templates = {
     patternSize: 4,
   },
   games: {
-    font: "'Black Han Sans', sans-serif",
+    font: "'Bebas Neue', sans-serif",
     titleKey: "tplGamesTitle",
     subKey: "tplGamesSub",
     titleColor: "#f0abfc",
@@ -166,6 +174,9 @@ let currentLang = navigator.language.startsWith("ko") ? "ko" : "en";
 // Tracks which template's title/subtitle is currently showing, so a language
 // toggle can re-translate it. "characters" is the template the page loads with.
 let activeTemplate = "characters";
+// Text alignment is a layout preference, not part of a template's theme, so it
+// persists across template switches instead of being reset by them.
+let textAlign = "center";
 
 function applyTranslations() {
   document.querySelectorAll("[data-i18n]").forEach((el) => {
@@ -301,6 +312,7 @@ const ui = {
   footer: document.getElementById("footerWatermark"),
   tPrev: document.getElementById("titlePreview"),
   sPrev: document.getElementById("subtitlePreview"),
+  textBlock: document.getElementById("titleTextBlock"),
 };
 
 const modal = document.getElementById("imageModal");
@@ -370,6 +382,7 @@ function updateStyles() {
   ui.sPrev.style.fontFamily = ui.font.value;
   ui.sPrev.style.fontSize = `${ui.sSize.value}px`;
   ui.sPrev.style.color = ui.sCol.value;
+  ui.textBlock.style.textAlign = textAlign;
 
   ui.grid.style.setProperty("--img-bright", ui.bright.value / 100);
   ui.grid.style.setProperty("--img-opac", ui.opac.value / 100);
@@ -725,11 +738,28 @@ document.querySelectorAll(".template-btn").forEach((btn) => {
   });
 });
 
+function markActiveAlignButton() {
+  document.querySelectorAll(".align-btn").forEach((btn) => {
+    const isActive = btn.dataset.align === textAlign;
+    btn.classList.toggle("bg-blue-600", isActive);
+    btn.classList.toggle("bg-gray-700", !isActive);
+  });
+}
+
+document.querySelectorAll(".align-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    textAlign = btn.dataset.align;
+    updateStyles();
+    markActiveAlignButton();
+  });
+});
+
 applyTranslations();
 renderGrid();
 updateStyles(); // initialize gap on load
 renderTemplateSwatches();
 markActiveTemplateButton();
+markActiveAlignButton();
 
 // Canvas Export Logic
 // --- Canvas Export Logic ---
@@ -755,11 +785,12 @@ function wrapText(ctx, text, maxWidth) {
 
 // Draws text wrapped to maxWidth, distributing lines evenly across the
 // measured DOM box height so it lines up with the live preview exactly.
-function drawWrappedText(ctx, text, centerX, boxTop, boxHeight, maxWidth) {
+// `anchorX` is interpreted per ctx.textAlign, which the caller sets beforehand.
+function drawWrappedText(ctx, text, anchorX, boxTop, boxHeight, maxWidth) {
   const lines = wrapText(ctx, text, maxWidth);
   const lineHeight = boxHeight / lines.length;
   lines.forEach((line, i) => {
-    ctx.fillText(line, centerX, boxTop + lineHeight * (i + 0.5));
+    ctx.fillText(line, anchorX, boxTop + lineHeight * (i + 0.5));
   });
 }
 
@@ -891,16 +922,25 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   }
 
   // 3. Text (positioned at the exact same spot as the live preview)
-  ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   const cleanFontFamily = ui.font.value;
+  // Mirrors ui.textBlock's CSS text-align: the anchor x-coordinate is
+  // interpreted relative to ctx.textAlign, so all three reduce to picking
+  // the right edge of the grid's column to anchor against.
+  ctx.textAlign = textAlign;
+  const textAnchorX =
+    textAlign === "left"
+      ? gridLeft
+      : textAlign === "right"
+        ? gridLeft + textMaxWidth
+        : tW / 2;
 
   ctx.fillStyle = ui.tCol.value;
   ctx.font = `900 ${ui.tSize.value}px ${cleanFontFamily}`;
   drawWrappedText(
     ctx,
     ui.tIn.value,
-    tW / 2,
+    textAnchorX,
     ui.tPrev.offsetTop,
     ui.tPrev.offsetHeight,
     textMaxWidth,
@@ -911,7 +951,7 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   drawWrappedText(
     ctx,
     ui.sIn.value,
-    tW / 2,
+    textAnchorX,
     ui.sPrev.offsetTop,
     ui.sPrev.offsetHeight,
     textMaxWidth,
@@ -978,6 +1018,7 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   ctx.globalCompositeOperation = "difference";
   ctx.fillStyle = "#ffffff";
   ctx.font = `20px monospace`;
+  ctx.textAlign = "center";
   ctx.fillText("CHARTMAKER.SITE", tW / 2, footerCenterY);
   ctx.globalCompositeOperation = "source-over";
 

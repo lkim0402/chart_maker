@@ -8,7 +8,7 @@
      crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-      href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;900&family=Poppins:wght@400;600;700&family=Montserrat:wght@400;700;900&family=Bebas+Neue&family=Playfair+Display:wght@400;700;900&family=Pacifico&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
@@ -247,12 +247,49 @@
                 <option value="'Noto Sans KR', sans-serif">
                   Noto Sans / 고딕
                 </option>
-                <option value="'Black Han Sans', sans-serif">
-                  Black Han Sans
-                </option>
                 <option value="'Do Hyeon', sans-serif">Do Hyeon</option>
                 <option value="'Gowun Dodum', sans-serif">Gowun Dodum</option>
+                <option value="'Poppins', sans-serif">Poppins</option>
+                <option value="'Montserrat', sans-serif">Montserrat</option>
+                <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+                <option value="'Playfair Display', serif">
+                  Playfair Display
+                </option>
+                <option value="'Pacifico', cursive">Pacifico</option>
               </select>
+            </div>
+            <div>
+              <label
+                class="block text-[10px] text-gray-400 mb-0.5"
+                data-i18n="textAlignLabel"
+                >Text Alignment</label
+              >
+              <div class="grid grid-cols-3 gap-1">
+                <button
+                  type="button"
+                  data-align="left"
+                  class="align-btn bg-gray-700 hover:bg-gray-600 text-white text-[11px] font-semibold py-1.5 rounded border border-gray-600 transition"
+                  data-i18n="alignLeft"
+                >
+                  Left
+                </button>
+                <button
+                  type="button"
+                  data-align="center"
+                  class="align-btn bg-gray-700 hover:bg-gray-600 text-white text-[11px] font-semibold py-1.5 rounded border border-gray-600 transition"
+                  data-i18n="alignCenter"
+                >
+                  Center
+                </button>
+                <button
+                  type="button"
+                  data-align="right"
+                  class="align-btn bg-gray-700 hover:bg-gray-600 text-white text-[11px] font-semibold py-1.5 rounded border border-gray-600 transition"
+                  data-i18n="alignRight"
+                >
+                  Right
+                </button>
+              </div>
             </div>
             <div>
               <label
@@ -498,7 +535,7 @@
       >
         <div id="previewViewport" class="relative w-full overflow-hidden">
           <div id="previewStage" class="absolute top-0 left-0">
-            <div class="text-center">
+            <div id="titleTextBlock" class="text-center">
               <div id="titlePreview" class="font-black tracking-wide mb-1"></div>
               <div id="subtitlePreview" class="tracking-tight"></div>
             </div>
