@@ -140,8 +140,8 @@ const templates = {
     bgDir: "to bottom",
     pattern: "diamond",
     patternColor: "#fde68a",
-    patternOpacity: 60,
-    patternSpacing: 36,
+    patternOpacity: 15,
+    patternSpacing: 68,
     patternSize: 10,
   },
   songs: {
@@ -375,6 +375,7 @@ function updateStyles() {
   // Stage renders at true (unscaled) pixel size, matching the exported canvas exactly.
   ui.stage.style.paddingLeft = `${PADDING}px`;
   ui.stage.style.paddingRight = `${PADDING}px`;
+  ui.stage.style.paddingTop = `${PADDING}px`;
   ui.tPrev.parentElement.style.marginBottom = `${PADDING}px`;
   ui.footer.style.marginTop = `${PADDING}px`;
 
@@ -963,12 +964,13 @@ document.getElementById("exportBtn").addEventListener("click", () => {
     }
   }
 
-  // 5. Footer Watermark (matches text-neutral-500 + mix-blend-difference)
+  // 5. Footer Watermark (matches text-white + mix-blend-difference: white text
+  // differenced against the backdrop auto-inverts to white-on-dark / near-black-on-light).
   ctx.filter = "none";
   ctx.globalAlpha = 1;
   ctx.globalCompositeOperation = "difference";
-  ctx.fillStyle = "#737373";
-  ctx.font = `10px monospace`;
+  ctx.fillStyle = "#ffffff";
+  ctx.font = `14px monospace`;
   ctx.fillText("CHARTMAKER.SITE", tW / 2, footerCenterY);
   ctx.globalCompositeOperation = "source-over";
 
