@@ -46,7 +46,8 @@ const i18n = {
     tplSongsSub: "@ On repeat forever @",
     exportBtn: "Export PNG",
     shareTwitterBtn: "Share to X",
-    shareBtn: "Share",
+    shareHint:
+      "Downloads your chart image, then opens X - just attach it to the tweet",
     shareText: "I made my own custom chart with Chart Maker! 🎨✨",
     defaultTitle: "My Favorite Characters",
     defaultSub: "@ Fill in with your preferences @",
@@ -97,7 +98,7 @@ const i18n = {
     tplSongsSub: "@ 본인 취향인 노래를 채우면 되는 표 @",
     exportBtn: "이미지 저장 (PNG)",
     shareTwitterBtn: "X에 공유하기",
-    shareBtn: "공유하기",
+    shareHint: "차트 이미지를 다운로드한 후 X를 엽니다 - 트윗에 첨부해 주세요",
     shareText: "Chart Maker로 나만의 취향표를 만들었어요! 🎨✨",
     defaultTitle: "캐릭터 취향 모음표",
     defaultSub: "@ 본인 취향인 캐릭터를 채우면 되는 표 @",
@@ -1030,51 +1031,31 @@ function renderChartToCanvas() {
   return canvas;
 }
 
-document.getElementById("exportBtn").addEventListener("click", () => {
-  const canvas = renderChartToCanvas();
+function downloadCanvasAsPng(canvas) {
   const a = document.createElement("a");
   a.download = `custom-chart-${Date.now()}.png`;
   a.href = canvas.toDataURL("image/png");
   a.click();
+}
+
+document.getElementById("exportBtn").addEventListener("click", () => {
+  downloadCanvasAsPng(renderChartToCanvas());
 });
 
-const SHARE_URL = "https://chartmaker.site";
-
+// Twitter/X's web intent has no way to attach an image via URL - actually
+// posting media requires their API with OAuth, which needs a backend to hold
+// API secrets. The closest we can do from a static site: download the chart
+// so it's sitting in Downloads, then open the tweet compose window ready for
+// the user to drag it in.
 document.getElementById("shareTwitterBtn").addEventListener("click", () => {
+  downloadCanvasAsPng(renderChartToCanvas());
+
   const text = encodeURIComponent(i18n[currentLang].shareText);
   const hashtags = "ChartMaker,BiasChart";
-  const url = encodeURIComponent(SHARE_URL);
+  const url = encodeURIComponent("https://chartmaker.site");
   window.open(
     `https://twitter.com/intent/tweet?text=${text}&hashtags=${hashtags}&url=${url}`,
     "_blank",
     "noopener,noreferrer,width=550,height=420",
   );
 });
-
-// Native share sheet (mobile Chrome/Safari, some desktop browsers) lets users
-// pick any installed app - Instagram, KakaoTalk, Discord, etc. - and, where
-// file sharing is supported, attaches the actual chart image rather than
-// just a link, unlike Twitter's web intent which can't carry an image.
-const shareNativeBtn = document.getElementById("shareNativeBtn");
-if (navigator.share) {
-  shareNativeBtn.classList.remove("hidden");
-  shareNativeBtn.classList.add("flex");
-  shareNativeBtn.addEventListener("click", async () => {
-    const canvas = renderChartToCanvas();
-    const shareData = { title: "Chart Maker", text: i18n[currentLang].shareText, url: SHARE_URL };
-
-    canvas.toBlob(async (blob) => {
-      const file = blob && new File([blob], "custom-chart.png", { type: "image/png" });
-      const withFile = file ? { ...shareData, files: [file] } : shareData;
-      try {
-        if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share(withFile);
-        } else {
-          await navigator.share(shareData);
-        }
-      } catch (err) {
-        // User cancelled the share sheet - nothing to do.
-      }
-    }, "image/png");
-  });
-}
