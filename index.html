@@ -64,6 +64,45 @@
         <div
           class="bg-gray-800 p-3 rounded-xl border border-gray-700 shadow-md flex flex-col gap-3 max-h-[85vh] overflow-y-auto custom-scrollbar sticky top-6"
         >
+          <!-- 0. Templates -->
+          <div class="setting-section">
+            <h3 class="section-header" data-i18n="secTemplates">Templates</h3>
+            <div class="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                data-template="characters"
+                class="template-btn bg-gray-700 hover:bg-gray-600 text-white text-[11px] font-semibold py-2 rounded border border-gray-600 transition"
+                data-i18n="tplCharacters"
+              >
+                Characters
+              </button>
+              <button
+                type="button"
+                data-template="games"
+                class="template-btn bg-gray-700 hover:bg-gray-600 text-white text-[11px] font-semibold py-2 rounded border border-gray-600 transition"
+                data-i18n="tplGames"
+              >
+                Games
+              </button>
+              <button
+                type="button"
+                data-template="media"
+                class="template-btn bg-gray-700 hover:bg-gray-600 text-white text-[11px] font-semibold py-2 rounded border border-gray-600 transition"
+                data-i18n="tplMedia"
+              >
+                Movies/Media
+              </button>
+              <button
+                type="button"
+                data-template="songs"
+                class="template-btn bg-gray-700 hover:bg-gray-600 text-white text-[11px] font-semibold py-2 rounded border border-gray-600 transition"
+                data-i18n="tplSongs"
+              >
+                Songs
+              </button>
+            </div>
+          </div>
+
           <!-- 1. Grid Layout -->
           <div class="setting-section">
             <h3 class="section-header" data-i18n="secLayout">Grid Layout</h3>
@@ -307,6 +346,46 @@
                   id="bgColor3"
                   value="#8b5cf6"
                   class="w-full bg-gray-700 h-6 rounded border border-gray-600 p-0 cursor-pointer hidden"
+                />
+              </div>
+            </div>
+
+            <div class="h-px bg-gray-700 my-1"></div>
+
+            <div>
+              <label
+                class="block text-[10px] text-gray-400 mb-1"
+                data-i18n="patternLabel"
+                >Pattern</label
+              >
+              <select
+                id="patternType"
+                class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs mb-1"
+              >
+                <option value="none" data-i18n="patternNone">None</option>
+                <option value="stripes" data-i18n="patternStripes">
+                  Stripes
+                </option>
+                <option value="dots" data-i18n="patternDots">Dots</option>
+                <option value="stars" data-i18n="patternStars">Stars</option>
+                <option value="grid" data-i18n="patternGrid">Grid</option>
+              </select>
+              <div class="flex gap-2 items-center">
+                <input
+                  type="color"
+                  id="patternColor"
+                  value="#ffffff"
+                  class="w-8 bg-gray-700 h-6 rounded border border-gray-600 p-0 cursor-pointer"
+                  title="Pattern Color"
+                />
+                <input
+                  type="range"
+                  id="patternOpacity"
+                  min="5"
+                  max="100"
+                  value="25"
+                  class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                  title="Pattern Opacity"
                 />
               </div>
             </div>

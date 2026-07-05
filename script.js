@@ -23,6 +23,17 @@ const i18n = {
     bgSolid: "Solid",
     bgGrad2: "2-Color Gradient",
     bgGrad3: "3-Color Gradient",
+    patternLabel: "Pattern",
+    patternNone: "None",
+    patternStripes: "Stripes",
+    patternDots: "Dots",
+    patternStars: "Stars",
+    patternGrid: "Grid",
+    secTemplates: "Templates",
+    tplCharacters: "Characters",
+    tplGames: "Games",
+    tplMedia: "Movies/Media",
+    tplSongs: "Songs",
     exportBtn: "Export PNG",
     defaultTitle: "My Favorite Characters",
     defaultSub: "@ Fill in with your preferences @",
@@ -50,9 +61,80 @@ const i18n = {
     bgSolid: "단색",
     bgGrad2: "2색 그라데이션",
     bgGrad3: "3색 그라데이션",
+    patternLabel: "패턴",
+    patternNone: "없음",
+    patternStripes: "줄무늬",
+    patternDots: "물방울",
+    patternStars: "별",
+    patternGrid: "격자",
+    secTemplates: "템플릿",
+    tplCharacters: "캐릭터",
+    tplGames: "게임",
+    tplMedia: "영화/미디어",
+    tplSongs: "노래",
     exportBtn: "이미지 저장 (PNG)",
     defaultTitle: "캐릭터 취향 모음표",
     defaultSub: "@ 본인 취향인 캐릭터를 채우면 되는 표 @",
+  },
+};
+
+// --- Templates ---
+const templates = {
+  characters: {
+    font: "'Noto Sans KR', sans-serif",
+    title: "My Favorite Characters",
+    subtitle: "@ Fill in with your preferences @",
+    titleColor: "#ffffff",
+    subtitleColor: "#d4d4d4",
+    bgType: "gradient2",
+    bg1: "#000000",
+    bg2: "#1e3a8a",
+    bgDir: "to bottom",
+    pattern: "none",
+    patternColor: "#ffffff",
+    patternOpacity: 25,
+  },
+  games: {
+    font: "'Black Han Sans', sans-serif",
+    title: "My Favorite Games",
+    subtitle: "@ Level up your list @",
+    titleColor: "#f0abfc",
+    subtitleColor: "#c4b5fd",
+    bgType: "gradient2",
+    bg1: "#1e1b4b",
+    bg2: "#4c1d95",
+    bgDir: "135deg",
+    pattern: "grid",
+    patternColor: "#a78bfa",
+    patternOpacity: 25,
+  },
+  media: {
+    font: "'Do Hyeon', sans-serif",
+    title: "My Favorite Movies",
+    subtitle: "@ Lights, camera, action @",
+    titleColor: "#facc15",
+    subtitleColor: "#e5e7eb",
+    bgType: "gradient2",
+    bg1: "#000000",
+    bg2: "#422006",
+    bgDir: "to bottom",
+    pattern: "stars",
+    patternColor: "#fde68a",
+    patternOpacity: 60,
+  },
+  songs: {
+    font: "'Gowun Dodum', sans-serif",
+    title: "My Favorite Songs",
+    subtitle: "@ On repeat forever @",
+    titleColor: "#831843",
+    subtitleColor: "#9d174d",
+    bgType: "gradient2",
+    bg1: "#fbcfe8",
+    bg2: "#fdba74",
+    bgDir: "to right",
+    pattern: "dots",
+    patternColor: "#be185d",
+    patternOpacity: 20,
   },
 };
 
@@ -175,6 +257,9 @@ const ui = {
   bg1: document.getElementById("bgColor1"),
   bg2: document.getElementById("bgColor2"),
   bg3: document.getElementById("bgColor3"),
+  patternType: document.getElementById("patternType"),
+  patternColor: document.getElementById("patternColor"),
+  patternOpacity: document.getElementById("patternOpacity"),
   grid: document.getElementById("chartGrid"),
   viewport: document.getElementById("previewViewport"),
   stage: document.getElementById("previewStage"),
@@ -189,6 +274,56 @@ const mImg = document.getElementById("modalPreviewImg");
 const mZoom = document.getElementById("modalZoom");
 const mPanX = document.getElementById("modalPanX");
 const mPanY = document.getElementById("modalPanY");
+
+// --- Pattern Overlays ---
+// Patterns are pure CSS/canvas (gradients + one inline SVG tile for stars) so no
+// image assets are ever required, and they stay crisp at any grid size.
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function starsPatternImage(color, opacity) {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><g fill='${color}' fill-opacity='${opacity}'><path d='M10 2 L12.5 8 L19 8 L13.8 12 L15.8 18.5 L10 14.5 L4.2 18.5 L6.2 12 L1 8 L7.5 8 Z'/><path d='M42 22 L43.2 25.5 L47 25.5 L44 27.8 L45.2 31.5 L42 29.2 L38.8 31.5 L40 27.8 L37 25.5 L40.8 25.5 Z'/><path d='M22 40 L23.4 44 L27.5 44 L24.2 46.5 L25.5 50.5 L22 48 L18.5 50.5 L19.8 46.5 L16.5 44 L20.6 44 Z'/></g></svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+
+// Returns an array of {image, size} background layers (CSS multi-background),
+// listed topmost-first so they paint on top of whatever's beneath them.
+function getPatternLayers(type, color, opacity) {
+  const c = hexToRgba(color, opacity);
+  if (type === "stripes") {
+    return [
+      {
+        image: `repeating-linear-gradient(45deg, ${c} 0px, ${c} 2px, transparent 2px, transparent 12px)`,
+        size: "auto",
+      },
+    ];
+  }
+  if (type === "dots") {
+    return [
+      {
+        image: `radial-gradient(${c} 1.5px, transparent 1.5px)`,
+        size: "18px 18px",
+      },
+    ];
+  }
+  if (type === "grid") {
+    return [
+      { image: `linear-gradient(${c} 1px, transparent 1px)`, size: "24px 24px" },
+      {
+        image: `linear-gradient(90deg, ${c} 1px, transparent 1px)`,
+        size: "24px 24px",
+      },
+    ];
+  }
+  if (type === "stars") {
+    return [{ image: starsPatternImage(color, opacity), size: "60px 60px" }];
+  }
+  return [];
+}
 
 // Styles & Gap updates
 function updateStyles() {
@@ -217,17 +352,43 @@ function updateStyles() {
     ui.bg2.classList.add("hidden");
     ui.bg3.classList.add("hidden");
     ui.bgDir.classList.add("hidden");
-    ui.stage.style.background = ui.bg1.value;
   } else if (ui.bgType.value === "gradient2") {
     ui.bg2.classList.remove("hidden");
     ui.bg3.classList.add("hidden");
     ui.bgDir.classList.remove("hidden");
-    ui.stage.style.background = `linear-gradient(${ui.bgDir.value}, ${ui.bg1.value}, ${ui.bg2.value})`;
   } else {
     ui.bg2.classList.remove("hidden");
     ui.bg3.classList.remove("hidden");
     ui.bgDir.classList.remove("hidden");
-    ui.stage.style.background = `linear-gradient(${ui.bgDir.value}, ${ui.bg1.value}, ${ui.bg2.value}, ${ui.bg3.value})`;
+  }
+
+  // Base color always sits underneath (visible through transparent pattern gaps,
+  // and as the whole background when bgType is "solid").
+  ui.stage.style.backgroundColor = ui.bg1.value;
+
+  const layers = getPatternLayers(
+    ui.patternType.value,
+    ui.patternColor.value,
+    ui.patternOpacity.value / 100,
+  );
+  if (ui.bgType.value === "gradient2") {
+    layers.push({
+      image: `linear-gradient(${ui.bgDir.value}, ${ui.bg1.value}, ${ui.bg2.value})`,
+      size: "100% 100%",
+    });
+  } else if (ui.bgType.value === "gradient3") {
+    layers.push({
+      image: `linear-gradient(${ui.bgDir.value}, ${ui.bg1.value}, ${ui.bg2.value}, ${ui.bg3.value})`,
+      size: "100% 100%",
+    });
+  }
+
+  if (layers.length) {
+    ui.stage.style.backgroundImage = layers.map((l) => l.image).join(", ");
+    ui.stage.style.backgroundSize = layers.map((l) => l.size).join(", ");
+    ui.stage.style.backgroundRepeat = "repeat";
+  } else {
+    ui.stage.style.backgroundImage = "none";
   }
 
   // Update box roundness live
@@ -422,6 +583,9 @@ const interactiveControls = [
   ui.bg1,
   ui.bg2,
   ui.bg3,
+  ui.patternType,
+  ui.patternColor,
+  ui.patternOpacity,
   ui.font,
   ui.radius,
   ui.gap,
@@ -440,6 +604,26 @@ gridTriggers.forEach((ctrl) =>
     updateStyles();
   }),
 );
+
+document.querySelectorAll(".template-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const t = templates[btn.dataset.template];
+    if (!t) return;
+    ui.font.value = t.font;
+    ui.tIn.value = t.title;
+    ui.sIn.value = t.subtitle;
+    ui.tCol.value = t.titleColor;
+    ui.sCol.value = t.subtitleColor;
+    ui.bgType.value = t.bgType;
+    ui.bg1.value = t.bg1;
+    ui.bg2.value = t.bg2;
+    ui.bgDir.value = t.bgDir;
+    ui.patternType.value = t.pattern;
+    ui.patternColor.value = t.patternColor;
+    ui.patternOpacity.value = t.patternOpacity;
+    updateStyles();
+  });
+});
 
 applyTranslations();
 renderGrid();
@@ -475,6 +659,62 @@ function drawWrappedText(ctx, text, centerX, boxTop, boxHeight, maxWidth) {
   lines.forEach((line, i) => {
     ctx.fillText(line, centerX, boxTop + lineHeight * (i + 0.5));
   });
+}
+
+// Draws a 5-point star centered at (cx, cy) onto a canvas context.
+function drawStar(ctx, cx, cy, outerR, innerR, rotation = 0) {
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const r = i % 2 === 0 ? outerR : innerR;
+    const angle = rotation + (Math.PI / 5) * i - Math.PI / 2;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+// Builds one repeatable tile matching the CSS pattern layer for the same type,
+// so ctx.createPattern(tile, "repeat") reproduces the live preview exactly.
+function drawPatternTile(type, color, opacity) {
+  const size = type === "stripes" ? 12 : type === "dots" ? 18 : type === "grid" ? 24 : 60;
+  const tile = document.createElement("canvas");
+  tile.width = size;
+  tile.height = size;
+  const tctx = tile.getContext("2d");
+  const c = hexToRgba(color, opacity);
+
+  if (type === "stripes") {
+    tctx.strokeStyle = c;
+    tctx.lineWidth = 2;
+    tctx.beginPath();
+    tctx.moveTo(-2, size + 2);
+    tctx.lineTo(size + 2, -2);
+    tctx.moveTo(-2 - size, size + 2);
+    tctx.lineTo(2, -2);
+    tctx.stroke();
+  } else if (type === "dots") {
+    tctx.fillStyle = c;
+    tctx.beginPath();
+    tctx.arc(size / 2, size / 2, 1.5, 0, Math.PI * 2);
+    tctx.fill();
+  } else if (type === "grid") {
+    tctx.strokeStyle = c;
+    tctx.lineWidth = 1;
+    tctx.beginPath();
+    tctx.moveTo(0, 0.5);
+    tctx.lineTo(size, 0.5);
+    tctx.moveTo(0.5, 0);
+    tctx.lineTo(0.5, size);
+    tctx.stroke();
+  } else if (type === "stars") {
+    tctx.fillStyle = c;
+    drawStar(tctx, 10, 8, 5, 2.3);
+    drawStar(tctx, 42, 22, 3.5, 1.6);
+    drawStar(tctx, 22, 46, 4.5, 2);
+  }
+  return tile;
 }
 
 document.getElementById("exportBtn").addEventListener("click", () => {
@@ -533,6 +773,19 @@ document.getElementById("exportBtn").addEventListener("click", () => {
       grd.addColorStop(1, ui.bg2.value);
     }
     ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, tW, tH);
+  }
+
+  // 2b. Pattern overlay (drawn as a repeating canvas tile so it matches the
+  // CSS pattern layer pixel-for-pixel regardless of stage size).
+  const patType = ui.patternType.value;
+  if (patType !== "none") {
+    const tile = drawPatternTile(
+      patType,
+      ui.patternColor.value,
+      ui.patternOpacity.value / 100,
+    );
+    ctx.fillStyle = ctx.createPattern(tile, "repeat");
     ctx.fillRect(0, 0, tW, tH);
   }
 
