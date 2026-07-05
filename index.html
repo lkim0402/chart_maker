@@ -518,40 +518,6 @@
               />
             </div>
 
-            <div class="h-px bg-gray-700 my-1"></div>
-
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label
-                  class="block text-[10px] text-gray-400 mb-1"
-                  data-i18n="brightLabel"
-                  >Brightness</label
-                >
-                <input
-                  type="range"
-                  id="imgBrightness"
-                  min="10"
-                  max="200"
-                  value="100"
-                  class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                />
-              </div>
-              <div>
-                <label
-                  class="block text-[10px] text-gray-400 mb-1"
-                  data-i18n="opacLabel"
-                  >Opacity</label
-                >
-                <input
-                  type="range"
-                  id="imgOpacity"
-                  min="10"
-                  max="100"
-                  value="100"
-                  class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                />
-              </div>
-            </div>
           </div>
 
           <button
@@ -576,11 +542,7 @@
               <div id="subtitlePreview" class="tracking-tight"></div>
             </div>
 
-            <div
-              id="chartGrid"
-              class="grid"
-              style="--img-bright: 1; --img-opac: 1"
-            ></div>
+            <div id="chartGrid" class="grid"></div>
 
             <div
               id="footerWatermark"

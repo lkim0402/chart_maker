@@ -15,8 +15,6 @@ const i18n = {
     cellWLabel: "Width (px)",
     cellHLabel: "Height (px)",
     fontLabel: "Font Family",
-    brightLabel: "Brightness",
-    opacLabel: "Opacity",
     textAlignLabel: "Text Alignment",
     alignLeft: "Left",
     alignCenter: "Center",
@@ -65,8 +63,6 @@ const i18n = {
     cellWLabel: "가로 크기 (px)",
     cellHLabel: "세로 크기 (px)",
     fontLabel: "글꼴 (Font)",
-    brightLabel: "밝기",
-    opacLabel: "투명도",
     textAlignLabel: "텍스트 정렬",
     alignLeft: "왼쪽",
     alignCenter: "가운데",
@@ -302,8 +298,6 @@ const ui = {
   sIn: document.getElementById("subtitleInput"),
   sSize: document.getElementById("subtitleSize"),
   sCol: document.getElementById("subtitleColor"),
-  bright: document.getElementById("imgBrightness"),
-  opac: document.getElementById("imgOpacity"),
   bgType: document.getElementById("bgType"),
   bgDir: document.getElementById("gradDirection"),
   bg1: document.getElementById("bgColor1"),
@@ -391,9 +385,6 @@ function updateStyles() {
   ui.sPrev.style.fontSize = `${ui.sSize.value}px`;
   ui.sPrev.style.color = ui.sCol.value;
   ui.textBlock.style.textAlign = textAlign;
-
-  ui.grid.style.setProperty("--img-bright", ui.bright.value / 100);
-  ui.grid.style.setProperty("--img-opac", ui.opac.value / 100);
 
   // Fix: Gap successfully updating preview grid
   ui.grid.style.gap = `${ui.gap.value}px`;
@@ -635,8 +626,6 @@ const interactiveControls = [
   ui.sIn,
   ui.sSize,
   ui.sCol,
-  ui.bright,
-  ui.opac,
   ui.bgType,
   ui.bgDir,
   ui.bg1,
@@ -971,8 +960,6 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   );
 
   // 4. Grid
-  const brightVal = ui.bright.value / 100;
-  const opacVal = ui.opac.value / 100;
   const targetRatio = cW / cH;
 
   for (let r = 0; r < rows; r++) {
@@ -995,9 +982,6 @@ document.getElementById("exportBtn").addEventListener("click", () => {
       if (loadedImages[cellId]) {
         const img = loadedImages[cellId].img;
         const st = cellSettings[cellId];
-
-        ctx.globalAlpha = opacVal;
-        ctx.filter = `brightness(${brightVal})`;
 
         let sw, sh;
         if (img.width / img.height > targetRatio) {

@@ -2,7 +2,6 @@
   display: none;
 }
 #chartGrid img {
-  filter: brightness(var(--img-bright, 1)) opacity(var(--img-opac, 1));
   transition:
     transform 0.1s,
     object-position 0.1s;
