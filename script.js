@@ -30,6 +30,7 @@ const i18n = {
     patternDiamond: "Diamond",
     patternGrid: "Grid",
     patternSpacingLabel: "Pattern Spacing",
+    patternSizeLabel: "Pattern Size",
     secTemplates: "Templates",
     tplCharacters: "Characters",
     tplGames: "Games",
@@ -75,6 +76,7 @@ const i18n = {
     patternDiamond: "다이아몬드",
     patternGrid: "격자",
     patternSpacingLabel: "패턴 간격",
+    patternSizeLabel: "패턴 크기",
     secTemplates: "템플릿",
     tplCharacters: "캐릭터",
     tplGames: "게임",
@@ -108,6 +110,7 @@ const templates = {
     patternColor: "#ffffff",
     patternOpacity: 25,
     patternSpacing: 24,
+    patternSize: 4,
   },
   games: {
     font: "'Black Han Sans', sans-serif",
@@ -123,6 +126,7 @@ const templates = {
     patternColor: "#a78bfa",
     patternOpacity: 25,
     patternSpacing: 24,
+    patternSize: 1,
   },
   media: {
     font: "'Do Hyeon', sans-serif",
@@ -138,6 +142,7 @@ const templates = {
     patternColor: "#fde68a",
     patternOpacity: 60,
     patternSpacing: 36,
+    patternSize: 10,
   },
   songs: {
     font: "'Gowun Dodum', sans-serif",
@@ -153,6 +158,7 @@ const templates = {
     patternColor: "#be185d",
     patternOpacity: 20,
     patternSpacing: 18,
+    patternSize: 1.5,
   },
 };
 
@@ -283,6 +289,7 @@ const ui = {
   patternColor: document.getElementById("patternColor"),
   patternOpacity: document.getElementById("patternOpacity"),
   patternSpacing: document.getElementById("patternSpacing"),
+  patternSize: document.getElementById("patternSize"),
   grid: document.getElementById("chartGrid"),
   viewport: document.getElementById("previewViewport"),
   stage: document.getElementById("previewStage"),
@@ -319,26 +326,27 @@ function svgTileUrl(size, inner) {
 
 // Returns an array of {image, size} background layers (CSS multi-background),
 // listed topmost-first so they paint on top of whatever's beneath them.
-// `spacing` is the tile period in px, i.e. how far apart repeats land.
-function getPatternLayers(type, color, opacity, spacing) {
+// `spacing` is the tile period in px (how far apart repeats land); `size` is
+// the shape's own dot radius / line thickness, independent of spacing.
+function getPatternLayers(type, color, opacity, spacing, size) {
   const s = spacing;
   if (type === "stripes") {
-    const w = Math.max(1, s * 0.08);
+    const w = Math.max(1, size);
     const inner = `<g stroke='${color}' stroke-opacity='${opacity}' stroke-width='${w}'><line x1='0' y1='${s}' x2='${s}' y2='0'/><line x1='${-s / 2}' y1='${s / 2}' x2='${s / 2}' y2='${-s / 2}'/><line x1='${s / 2}' y1='${s * 1.5}' x2='${s * 1.5}' y2='${s / 2}'/></g>`;
     return [{ image: svgTileUrl(s, inner), size: `${s}px ${s}px` }];
   }
   if (type === "dots") {
-    const r = Math.max(1, s * 0.08);
+    const r = Math.max(0.5, size);
     const inner = `<circle cx='${s / 2}' cy='${s / 2}' r='${r}' fill='${color}' fill-opacity='${opacity}'/>`;
     return [{ image: svgTileUrl(s, inner), size: `${s}px ${s}px` }];
   }
   if (type === "grid") {
-    const w = Math.max(1, s * 0.045);
+    const w = Math.max(1, size);
     const inner = `<g stroke='${color}' stroke-opacity='${opacity}' stroke-width='${w}'><line x1='0' y1='0' x2='${s}' y2='0'/><line x1='0' y1='0' x2='0' y2='${s}'/></g>`;
     return [{ image: svgTileUrl(s, inner), size: `${s}px ${s}px` }];
   }
   if (type === "diamond") {
-    const r = s * 0.28;
+    const r = Math.max(1, size);
     const cx = s / 2,
       cy = s / 2;
     const inner = `<polygon points='${cx},${cy - r} ${cx + r},${cy} ${cx},${cy + r} ${cx - r},${cy}' fill='${color}' fill-opacity='${opacity}'/>`;
@@ -393,6 +401,7 @@ function updateStyles() {
     ui.patternColor.value,
     ui.patternOpacity.value / 100,
     parseInt(ui.patternSpacing.value) || 24,
+    parseFloat(ui.patternSize.value) || 4,
   );
   if (ui.bgType.value === "gradient2") {
     layers.push({
@@ -610,6 +619,7 @@ const interactiveControls = [
   ui.patternColor,
   ui.patternOpacity,
   ui.patternSpacing,
+  ui.patternSize,
   ui.font,
   ui.radius,
   ui.gap,
@@ -638,6 +648,7 @@ function buildTemplatePreviewLayers(t) {
     t.patternColor,
     t.patternOpacity / 100,
     t.patternSpacing,
+    t.patternSize,
   );
   if (t.bgType === "gradient2") {
     layers.push({
@@ -700,6 +711,7 @@ document.querySelectorAll(".template-btn").forEach((btn) => {
     ui.patternColor.value = t.patternColor;
     ui.patternOpacity.value = t.patternOpacity;
     ui.patternSpacing.value = t.patternSpacing;
+    ui.patternSize.value = t.patternSize;
     updateStyles();
     markActiveTemplateButton();
   });
@@ -756,41 +768,42 @@ function drawDiamond(ctx, cx, cy, r) {
 
 // Builds one repeatable tile matching the CSS pattern layer for the same type,
 // so ctx.createPattern(tile, "repeat") reproduces the live preview exactly.
-// `spacing` is the tile period in px, matching getPatternLayers' `spacing` param.
-function drawPatternTile(type, color, opacity, spacing) {
-  const size = spacing;
+// `spacing` is the tile period in px; `shapeSize` is the dot radius / line
+// thickness, independent of spacing (matches getPatternLayers' params).
+function drawPatternTile(type, color, opacity, spacing, shapeSize) {
+  const s = spacing;
   const tile = document.createElement("canvas");
-  tile.width = size;
-  tile.height = size;
+  tile.width = s;
+  tile.height = s;
   const tctx = tile.getContext("2d");
   const c = hexToRgba(color, opacity);
 
   if (type === "stripes") {
     tctx.strokeStyle = c;
-    tctx.lineWidth = Math.max(1, size * 0.08);
+    tctx.lineWidth = Math.max(1, shapeSize);
     tctx.beginPath();
-    tctx.moveTo(-2, size + 2);
-    tctx.lineTo(size + 2, -2);
-    tctx.moveTo(-2 - size, size + 2);
+    tctx.moveTo(-2, s + 2);
+    tctx.lineTo(s + 2, -2);
+    tctx.moveTo(-2 - s, s + 2);
     tctx.lineTo(2, -2);
     tctx.stroke();
   } else if (type === "dots") {
     tctx.fillStyle = c;
     tctx.beginPath();
-    tctx.arc(size / 2, size / 2, Math.max(1, size * 0.08), 0, Math.PI * 2);
+    tctx.arc(s / 2, s / 2, Math.max(0.5, shapeSize), 0, Math.PI * 2);
     tctx.fill();
   } else if (type === "grid") {
     tctx.strokeStyle = c;
-    tctx.lineWidth = Math.max(1, size * 0.045);
+    tctx.lineWidth = Math.max(1, shapeSize);
     tctx.beginPath();
     tctx.moveTo(0, 0.5);
-    tctx.lineTo(size, 0.5);
+    tctx.lineTo(s, 0.5);
     tctx.moveTo(0.5, 0);
-    tctx.lineTo(0.5, size);
+    tctx.lineTo(0.5, s);
     tctx.stroke();
   } else if (type === "diamond") {
     tctx.fillStyle = c;
-    drawDiamond(tctx, size / 2, size / 2, size * 0.28);
+    drawDiamond(tctx, s / 2, s / 2, Math.max(1, shapeSize));
   }
   return tile;
 }
@@ -863,6 +876,7 @@ document.getElementById("exportBtn").addEventListener("click", () => {
       ui.patternColor.value,
       ui.patternOpacity.value / 100,
       parseInt(ui.patternSpacing.value) || 24,
+      parseFloat(ui.patternSize.value) || 4,
     );
     ctx.fillStyle = ctx.createPattern(tile, "repeat");
     ctx.fillRect(0, 0, tW, tH);
