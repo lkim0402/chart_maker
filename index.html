@@ -38,6 +38,7 @@
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9380214172146663"
      crossorigin="anonymous"></script>
+    <script defer src="/_vercel/insights/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;900&family=Poppins:wght@400;600;700&family=Montserrat:wght@400;700;900&family=Bebas+Neue&family=Playfair+Display:wght@400;700;900&family=Pacifico&display=swap"
@@ -335,6 +336,31 @@
                   class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs"
                 />
               </div>
+            </div>
+            <label
+              class="flex items-center gap-2 mt-2 text-[10px] text-gray-400 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                id="showLabelsToggle"
+                class="accent-blue-600"
+              />
+              <span data-i18n="showLabelsLabel">Add Caption Text Under Photos</span>
+            </label>
+            <div class="mt-2">
+              <label
+                class="block text-[10px] text-gray-400"
+                data-i18n="labelSizeLabel"
+                >Label Font Size (px)</label
+              >
+              <input
+                type="number"
+                id="labelSizeInput"
+                min="6"
+                max="72"
+                value="14"
+                class="w-full bg-gray-700 text-white p-1 rounded border border-gray-600 text-xs"
+              />
             </div>
           </div>
 

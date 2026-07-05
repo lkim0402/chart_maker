@@ -19,6 +19,9 @@ const i18n = {
     radiusLabel: "Roundness (px)",
     cellWLabel: "Width (px)",
     cellHLabel: "Height (px)",
+    showLabelsLabel: "Add Caption Text Under Photos",
+    labelSizeLabel: "Label Font Size (px)",
+    labelPlaceholder: "Label",
     fontLabel: "Font Family",
     textAlignLabel: "Text Alignment",
     alignLeft: "Left",
@@ -95,6 +98,9 @@ const i18n = {
     radiusLabel: "둥글기 (Radius)",
     cellWLabel: "가로 크기 (px)",
     cellHLabel: "세로 크기 (px)",
+    showLabelsLabel: "사진 아래 설명 텍스트 추가",
+    labelSizeLabel: "라벨 글자 크기 (px)",
+    labelPlaceholder: "라벨",
     fontLabel: "글꼴 (Font)",
     textAlignLabel: "텍스트 정렬",
     alignLeft: "왼쪽",
@@ -329,6 +335,7 @@ document.querySelectorAll('input[type="number"]').forEach((input) => {
 // --- Core Variables ---
 let loadedImages = {};
 let cellSettings = {};
+let cellLabels = {};
 let activeEditCell = null;
 
 // Shared with the export routine so the live preview and the downloaded PNG use identical spacing.
@@ -346,6 +353,8 @@ const ui = {
   h: document.getElementById("cellHeightInput"),
   gap: document.getElementById("gapInput"),
   radius: document.getElementById("radiusInput"),
+  showLabels: document.getElementById("showLabelsToggle"),
+  labelSize: document.getElementById("labelSizeInput"),
   font: document.getElementById("fontSelect"),
   tIn: document.getElementById("titleInput"),
   tSize: document.getElementById("titleSize"),
@@ -496,10 +505,22 @@ function updateStyles() {
     ui.stage.style.backgroundImage = "none";
   }
 
-  // Update box roundness live
-  document
-    .querySelectorAll(".chart-cell")
-    .forEach((cell) => (cell.style.borderRadius = `${ui.radius.value}px`));
+  // Update box roundness live. When labels are shown, the label strip owns the
+  // bottom corners (visually attached to the image cell above it) so only the
+  // top corners round on the image itself.
+  const rds = ui.radius.value;
+  const showLabels = ui.showLabels.checked;
+  document.querySelectorAll(".chart-cell").forEach((cell) => {
+    cell.style.borderRadius = showLabels
+      ? `${rds}px ${rds}px 0 0`
+      : `${rds}px`;
+  });
+  document.querySelectorAll(".cell-label-input").forEach((label) => {
+    label.classList.toggle("hidden", !showLabels);
+    label.style.borderRadius = `0 0 ${rds}px ${rds}px`;
+    label.style.fontSize = `${ui.labelSize.value}px`;
+    label.style.fontFamily = ui.font.value;
+  });
 
   updatePreviewLayout();
 }
@@ -551,15 +572,21 @@ function renderGrid() {
   const cW = parseInt(ui.w.value) || 300;
   const cH = parseInt(ui.h.value) || 300;
   const totalCells = cols * rows;
-  // Literal pixel tracks (not fr-based) so gap/radius are always proportioned
-  // to the cell size exactly as they will be in the exported image.
+  // Literal pixel column tracks (not fr-based) so gap/radius are always
+  // proportioned to the cell size exactly as they will be in the exported
+  // image. Row height is left to content (image + optional label strip) so
+  // toggling labels doesn't need to be threaded through this sizing.
   ui.grid.style.gridTemplateColumns = `repeat(${cols}, ${cW}px)`;
-  ui.grid.style.gridAutoRows = `${cH}px`;
+  ui.grid.style.gridAutoRows = "auto";
 
   for (let i = 0; i < totalCells; i++) {
     const cellId = `cell-${i}`;
     if (!cellSettings[cellId])
       cellSettings[cellId] = { zoom: 1, panX: 0, panY: 0 };
+    if (cellLabels[cellId] === undefined) cellLabels[cellId] = "";
+
+    const wrap = document.createElement("div");
+    wrap.className = "flex flex-col";
 
     const cell = document.createElement("div");
     cell.className =
@@ -606,7 +633,7 @@ function renderGrid() {
       };
       reader.readAsDataURL(file);
     });
-    ui.grid.appendChild(cell);
+    wrap.appendChild(cell);
 
     if (loadedImages[cellId]) {
       const imgElement = document.getElementById(`img-${cellId}`);
@@ -615,6 +642,20 @@ function renderGrid() {
       cell.querySelector(`#icon-${cellId}`).classList.add("hidden");
       applyCellTransform(cellId);
     }
+
+    const label = document.createElement("input");
+    label.type = "text";
+    label.id = `label-${cellId}`;
+    label.className =
+      "cell-label-input w-full text-center font-semibold text-gray-200 bg-black/70 border border-t-0 border-neutral-700/50 px-1 py-1.5 outline-none focus:bg-black/90 hidden";
+    label.placeholder = i18n[currentLang].labelPlaceholder;
+    label.value = cellLabels[cellId];
+    label.addEventListener("input", () => {
+      cellLabels[cellId] = label.value;
+    });
+    wrap.appendChild(label);
+
+    ui.grid.appendChild(wrap);
   }
 }
 
@@ -694,6 +735,8 @@ const interactiveControls = [
   ui.font,
   ui.radius,
   ui.gap,
+  ui.showLabels,
+  ui.labelSize,
 ];
 interactiveControls.forEach((ctrl) =>
   ctrl.addEventListener("input", updateStyles),
@@ -1018,16 +1061,25 @@ function renderChartToCanvas() {
 
   // 4. Grid
   const targetRatio = cW / cH;
+  const showLabels = ui.showLabels.checked;
+  // Measured from the live DOM (rather than a hardcoded constant) so the
+  // export matches whatever the label strip's actual CSS renders it as.
+  const sampleLabel = ui.grid.querySelector(".cell-label-input");
+  const labelHeight = showLabels && sampleLabel ? sampleLabel.offsetHeight : 0;
+  const rowHeight = cH + labelHeight;
 
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       const cellId = `cell-${r * cols + c}`;
       const x = gridLeft + c * (cW + gap);
-      const y = gridTop + r * (cH + gap);
+      const y = gridTop + r * (rowHeight + gap);
 
       ctx.save();
       ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(x, y, cW, cH, rds);
+      // When labels are shown, the label strip owns the bottom corners, so
+      // only the top corners round on the image itself (mirrors the CSS).
+      const imgRadii = showLabels ? [rds, rds, 0, 0] : rds;
+      if (ctx.roundRect) ctx.roundRect(x, y, cW, cH, imgRadii);
       else ctx.rect(x, y, cW, cH);
       ctx.fillStyle = "rgba(23, 23, 23, 0.6)"; // matches bg-neutral-900/60
       ctx.fill();
@@ -1062,6 +1114,30 @@ function renderChartToCanvas() {
         ctx.drawImage(img, sx, sy, sw, sh, x, y, cW, cH);
       }
       ctx.restore();
+
+      if (showLabels) {
+        const ly = y + cH;
+        ctx.save();
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(x, ly, cW, labelHeight, [0, 0, rds, rds]);
+        else ctx.rect(x, ly, cW, labelHeight);
+        ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // matches bg-black/70
+        ctx.fill();
+        ctx.strokeStyle = "rgba(64, 64, 64, 0.5)"; // matches border-neutral-700/50
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.clip();
+
+        const text = cellLabels[cellId];
+        if (text) {
+          ctx.fillStyle = "#e5e7eb"; // matches text-gray-200
+          ctx.font = `600 ${ui.labelSize.value}px ${cleanFontFamily}`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(text, x + cW / 2, ly + labelHeight / 2);
+        }
+        ctx.restore();
+      }
     }
   }
 

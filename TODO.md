@@ -7,7 +7,7 @@
 
 - administrative things
   - [x] by domain from namecheap - chartmaker.site
-  - [ ] submit application to google adsense
+  - [x] submit application to google adsense
     - basically connected my acc to google adsense & submitted an application
 - project things
   - [x] ads responsive to the website layout
@@ -15,6 +15,7 @@
     - controllable spacing
   - [x] default templates user can choose from?
     - make the user be able to see it on top
+  - [x] add text desc under each pic as checkbox option
   - [ ] maybe real life examples?
     - like maybe below i crawl other people's results from twitter or smth and showcase them lol
   - share to twitter feature!!!!!! <<< (maybe also include other sns)
