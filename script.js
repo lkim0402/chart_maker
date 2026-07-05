@@ -34,6 +34,12 @@ const i18n = {
     tplGames: "Games",
     tplMedia: "Movies/Media",
     tplSongs: "Songs",
+    tplGamesTitle: "My Favorite Games",
+    tplGamesSub: "@ Level up your list @",
+    tplMediaTitle: "My Favorite Movies",
+    tplMediaSub: "@ Lights, camera, action @",
+    tplSongsTitle: "My Favorite Songs",
+    tplSongsSub: "@ On repeat forever @",
     exportBtn: "Export PNG",
     defaultTitle: "My Favorite Characters",
     defaultSub: "@ Fill in with your preferences @",
@@ -72,6 +78,12 @@ const i18n = {
     tplGames: "게임",
     tplMedia: "영화/미디어",
     tplSongs: "노래",
+    tplGamesTitle: "게임 취향 모음표",
+    tplGamesSub: "@ 본인 취향인 게임을 채우면 되는 표 @",
+    tplMediaTitle: "영화 취향 모음표",
+    tplMediaSub: "@ 본인 취향인 영화를 채우면 되는 표 @",
+    tplSongsTitle: "노래 취향 모음표",
+    tplSongsSub: "@ 본인 취향인 노래를 채우면 되는 표 @",
     exportBtn: "이미지 저장 (PNG)",
     defaultTitle: "캐릭터 취향 모음표",
     defaultSub: "@ 본인 취향인 캐릭터를 채우면 되는 표 @",
@@ -82,8 +94,8 @@ const i18n = {
 const templates = {
   characters: {
     font: "'Noto Sans KR', sans-serif",
-    title: "My Favorite Characters",
-    subtitle: "@ Fill in with your preferences @",
+    titleKey: "defaultTitle",
+    subKey: "defaultSub",
     titleColor: "#ffffff",
     subtitleColor: "#d4d4d4",
     bgType: "gradient2",
@@ -96,8 +108,8 @@ const templates = {
   },
   games: {
     font: "'Black Han Sans', sans-serif",
-    title: "My Favorite Games",
-    subtitle: "@ Level up your list @",
+    titleKey: "tplGamesTitle",
+    subKey: "tplGamesSub",
     titleColor: "#f0abfc",
     subtitleColor: "#c4b5fd",
     bgType: "gradient2",
@@ -110,8 +122,8 @@ const templates = {
   },
   media: {
     font: "'Do Hyeon', sans-serif",
-    title: "My Favorite Movies",
-    subtitle: "@ Lights, camera, action @",
+    titleKey: "tplMediaTitle",
+    subKey: "tplMediaSub",
     titleColor: "#facc15",
     subtitleColor: "#e5e7eb",
     bgType: "gradient2",
@@ -124,8 +136,8 @@ const templates = {
   },
   songs: {
     font: "'Gowun Dodum', sans-serif",
-    title: "My Favorite Songs",
-    subtitle: "@ On repeat forever @",
+    titleKey: "tplSongsTitle",
+    subKey: "tplSongsSub",
     titleColor: "#831843",
     subtitleColor: "#9d174d",
     bgType: "gradient2",
@@ -139,25 +151,29 @@ const templates = {
 };
 
 let currentLang = navigator.language.startsWith("ko") ? "ko" : "en";
+// Tracks which template's title/subtitle is currently showing, so a language
+// toggle can re-translate it. "characters" is the template the page loads with.
+let activeTemplate = "characters";
 
 function applyTranslations() {
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.getAttribute("data-i18n");
     if (i18n[currentLang][key]) el.innerText = i18n[currentLang][key];
   });
-  if (
-    document.getElementById("titleInput").value ===
-    i18n[currentLang === "en" ? "ko" : "en"].defaultTitle
-  ) {
-    document.getElementById("titleInput").value =
-      i18n[currentLang].defaultTitle;
-  }
-  if (
-    document.getElementById("subtitleInput").value ===
-    i18n[currentLang === "en" ? "ko" : "en"].defaultSub
-  ) {
-    document.getElementById("subtitleInput").value =
-      i18n[currentLang].defaultSub;
+
+  // Only re-translate the title/subtitle if they still match the active
+  // template's text in the old language, so custom user-typed text is untouched.
+  const oldLang = currentLang === "en" ? "ko" : "en";
+  const t = templates[activeTemplate];
+  if (t) {
+    const titleInput = document.getElementById("titleInput");
+    const subtitleInput = document.getElementById("subtitleInput");
+    if (titleInput.value === i18n[oldLang][t.titleKey]) {
+      titleInput.value = i18n[currentLang][t.titleKey];
+    }
+    if (subtitleInput.value === i18n[oldLang][t.subKey]) {
+      subtitleInput.value = i18n[currentLang][t.subKey];
+    }
   }
   updateStyles();
 }
@@ -607,11 +623,13 @@ gridTriggers.forEach((ctrl) =>
 
 document.querySelectorAll(".template-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
-    const t = templates[btn.dataset.template];
+    const key = btn.dataset.template;
+    const t = templates[key];
     if (!t) return;
+    activeTemplate = key;
     ui.font.value = t.font;
-    ui.tIn.value = t.title;
-    ui.sIn.value = t.subtitle;
+    ui.tIn.value = i18n[currentLang][t.titleKey];
+    ui.sIn.value = i18n[currentLang][t.subKey];
     ui.tCol.value = t.titleColor;
     ui.sCol.value = t.subtitleColor;
     ui.bgType.value = t.bgType;
