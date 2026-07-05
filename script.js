@@ -4,6 +4,9 @@ const i18n = {
     mainTitle: "✨ Advanced Chart Maker",
     mainDesc:
       "Adjust layouts, pan/zoom images, and drag numbers to customize your chart.",
+    navAbout: "About",
+    navFaq: "FAQ",
+    navPrivacy: "Privacy",
     secLayout: "1. Grid Layout",
     secBox: "2. Box Design",
     secText: "3. Typography",
@@ -51,11 +54,33 @@ const i18n = {
     shareText: "I made my own custom chart with Chart Maker! 🎨✨",
     defaultTitle: "My Favorite Characters",
     defaultSub: "@ Fill in with your preferences @",
+    aboutHeading: "What is Chart Maker?",
+    aboutP1:
+      "Chart Maker is a free browser-based tool for building custom bias charts, favorites grids, and photo collages - the kind of grid layouts popular in K-pop and anime fandoms for showcasing your favorite characters, idols, games, or songs. No design software or account required: everything runs directly in your browser, and your photos never leave your device.",
+    howHeading: "How to Use It",
+    how1: "Pick a ready-made template, or start from the default layout.",
+    how2: "Set your grid's columns, rows, and cell size.",
+    how3: "Click any cell to upload a photo, then pan and zoom it into place.",
+    how4: "Customize the title, fonts, colors, background, and patterns.",
+    how5: "Export your finished chart as a PNG, or share it straight to X.",
+    faqHeading: "Frequently Asked Questions",
+    faq1Q: "What is a bias chart?",
+    faq1A:
+      "A bias chart is a grid-style graphic ranking or showcasing your favorite characters, idols, or other picks, popularized by K-pop and anime fandoms for sharing on social media.",
+    faq2Q: "Is Chart Maker free to use?",
+    faq2A: "Yes. Chart Maker is completely free, with no sign-up or account needed.",
+    faq3Q: "Can I use my own photos?",
+    faq3A:
+      "Yes. Click any cell in the grid to upload a photo, then adjust its zoom and position to fit exactly how you want.",
+    privacyLink: "Privacy Policy",
   },
   ko: {
     mainTitle: "✨ 고급 취향표 메이커",
     mainDesc:
       "마우스 휠이나 드래그로 수치를 조정하고, 이미지를 세밀하게 편집하세요.",
+    navAbout: "소개",
+    navFaq: "FAQ",
+    navPrivacy: "개인정보",
     secLayout: "1. 그리드 설정",
     secBox: "2. 칸 디자인",
     secText: "3. 텍스트",
@@ -102,6 +127,25 @@ const i18n = {
     shareText: "Chart Maker로 나만의 취향표를 만들었어요! 🎨✨",
     defaultTitle: "캐릭터 취향 모음표",
     defaultSub: "@ 본인 취향인 캐릭터를 채우면 되는 표 @",
+    aboutHeading: "차트 메이커란?",
+    aboutP1:
+      "차트 메이커는 취향표, 최애 모음 그리드, 포토 콜라주를 무료로 만들 수 있는 브라우저 기반 도구입니다. K-pop과 애니메이션 팬덤에서 인기 있는 그리드 레이아웃으로, 좋아하는 캐릭터, 아이돌, 게임, 노래를 소개할 때 많이 사용됩니다. 디자인 프로그램이나 계정 없이 브라우저에서 바로 실행되며, 업로드한 사진은 기기 밖으로 전송되지 않습니다.",
+    howHeading: "사용 방법",
+    how1: "미리 만들어진 템플릿을 선택하거나 기본 레이아웃에서 시작하세요.",
+    how2: "그리드의 열, 행, 칸 크기를 설정하세요.",
+    how3: "칸을 클릭해 사진을 업로드하고, 위치와 확대/축소를 조정하세요.",
+    how4: "제목, 글꼴, 색상, 배경, 패턴을 원하는 대로 꾸며보세요.",
+    how5: "완성된 차트를 PNG로 저장하거나 X에 바로 공유하세요.",
+    faqHeading: "자주 묻는 질문",
+    faq1Q: "취향표(bias chart)가 뭔가요?",
+    faq1A:
+      "취향표는 좋아하는 캐릭터나 아이돌 등을 그리드 형태로 보여주는 그래픽으로, K-pop과 애니메이션 팬덤에서 SNS에 공유하기 위해 널리 사용됩니다.",
+    faq2Q: "차트 메이커는 무료인가요?",
+    faq2A: "네, 차트 메이커는 회원가입 없이 완전히 무료로 이용할 수 있습니다.",
+    faq3Q: "제 사진을 사용할 수 있나요?",
+    faq3A:
+      "네, 그리드의 칸을 클릭해 사진을 업로드한 후 원하는 대로 확대/축소와 위치를 조정할 수 있습니다.",
+    privacyLink: "개인정보처리방침",
   },
 };
 
