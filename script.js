@@ -629,6 +629,58 @@ gridTriggers.forEach((ctrl) =>
   }),
 );
 
+// Builds the same {image, size} background layers updateStyles() would apply
+// to the live stage, so each template's preview card always matches what
+// clicking it actually produces.
+function buildTemplatePreviewLayers(t) {
+  const layers = getPatternLayers(
+    t.pattern,
+    t.patternColor,
+    t.patternOpacity / 100,
+    t.patternSpacing,
+  );
+  if (t.bgType === "gradient2") {
+    layers.push({
+      image: `linear-gradient(${t.bgDir}, ${t.bg1}, ${t.bg2})`,
+      size: "100% 100%",
+    });
+  } else if (t.bgType === "gradient3") {
+    layers.push({
+      image: `linear-gradient(${t.bgDir}, ${t.bg1}, ${t.bg2}, ${t.bg3})`,
+      size: "100% 100%",
+    });
+  }
+  return layers;
+}
+
+function renderTemplateSwatches() {
+  document.querySelectorAll(".template-btn").forEach((btn) => {
+    const t = templates[btn.dataset.template];
+    if (!t) return;
+    const swatch = btn.querySelector(".template-swatch");
+    const label = btn.querySelector(".template-label");
+    if (swatch) {
+      swatch.style.backgroundColor = t.bg1;
+      const layers = buildTemplatePreviewLayers(t);
+      swatch.style.backgroundImage = layers.map((l) => l.image).join(", ");
+      swatch.style.backgroundSize = layers.map((l) => l.size).join(", ");
+      swatch.style.backgroundRepeat = "repeat";
+    }
+    if (label) {
+      label.style.fontFamily = t.font;
+      label.style.color = t.titleColor;
+    }
+  });
+}
+
+function markActiveTemplateButton() {
+  document.querySelectorAll(".template-btn").forEach((btn) => {
+    const isActive = btn.dataset.template === activeTemplate;
+    btn.classList.toggle("border-blue-400", isActive);
+    btn.classList.toggle("border-transparent", !isActive);
+  });
+}
+
 document.querySelectorAll(".template-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
     const key = btn.dataset.template;
@@ -649,12 +701,15 @@ document.querySelectorAll(".template-btn").forEach((btn) => {
     ui.patternOpacity.value = t.patternOpacity;
     ui.patternSpacing.value = t.patternSpacing;
     updateStyles();
+    markActiveTemplateButton();
   });
 });
 
 applyTranslations();
 renderGrid();
 updateStyles(); // initialize gap on load
+renderTemplateSwatches();
+markActiveTemplateButton();
 
 // Canvas Export Logic
 // --- Canvas Export Logic ---
