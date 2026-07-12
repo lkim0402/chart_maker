@@ -3,17 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FAQ - Chart Maker</title>
+    <title>Guides - Chart Maker</title>
     <meta
       name="description"
-      content="Frequently asked questions about Chart Maker: what a bias chart is, whether it's free, and using your own photos."
+      content="Guides for building bias charts and favorites grids: step-by-step instructions, grid size tips, theme ideas, and tool comparisons."
     />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://chartmaker.site/faq.html" />
+    <link rel="canonical" href="https://chartmaker.site/guides/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <script defer src="/_vercel/insights/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/style.css" />
   </head>
   <body
     class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center px-4 sm:px-6 pb-4 sm:pb-6 pt-20 transition-colors duration-300"
@@ -36,13 +36,13 @@
         >
         <a
           href="/guides/"
-          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
+          class="text-[11px] sm:text-xs text-white transition"
           data-i18n="navGuides"
           >Guides</a
         >
         <a
           href="/faq.html"
-          class="text-[11px] sm:text-xs text-white transition"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
           data-i18n="navFaq"
           >FAQ</a
         >
@@ -74,57 +74,67 @@
     </nav>
 
     <div class="w-full max-w-3xl">
-      <h1 class="text-2xl font-extrabold text-white mb-6 mt-2" data-i18n="pageTitle">
-        Frequently Asked Questions
+      <h1 class="text-2xl font-extrabold text-white mb-2 mt-2" data-i18n="pageTitle">
+        Guides
       </h1>
+      <p class="text-gray-400 text-xs mb-6" data-i18n="pageIntro">
+        Tips and walkthroughs for building bias charts, favorites grids, and
+        photo collages.
+      </p>
 
-      <div
-        class="bg-gray-800/40 border border-gray-700 rounded-xl p-6 sm:p-8 text-sm leading-relaxed text-gray-300 space-y-5"
-      >
-        <div>
-          <p class="text-white font-semibold mb-1" data-i18n="faq1Q">
-            What is a bias chart?
+      <div class="grid sm:grid-cols-2 gap-4">
+        <a
+          href="/guides/how-to-make-a-bias-chart.html"
+          class="block bg-gray-800/40 border border-gray-700 hover:border-blue-400 rounded-xl p-5 transition"
+        >
+          <div class="text-2xl mb-2">📋</div>
+          <h2 class="text-sm font-bold text-white mb-1" data-i18n="card1Title">
+            How to Make a Bias Chart
+          </h2>
+          <p class="text-xs text-gray-400" data-i18n="card1Desc">
+            A step-by-step walkthrough from blank grid to finished, shareable
+            PNG.
           </p>
-          <p data-i18n="faq1A">
-            A bias chart is a grid-style graphic ranking or showcasing your
-            favorite characters, idols, or other picks, popularized by K-pop
-            and anime fandoms for sharing on social media.
+        </a>
+
+        <a
+          href="/guides/grid-size-guide.html"
+          class="block bg-gray-800/40 border border-gray-700 hover:border-blue-400 rounded-xl p-5 transition"
+        >
+          <div class="text-2xl mb-2">🔢</div>
+          <h2 class="text-sm font-bold text-white mb-1" data-i18n="card2Title">
+            Grid Size Guide: 3x3 vs 4x4 vs 5x5
+          </h2>
+          <p class="text-xs text-gray-400" data-i18n="card2Desc">
+            Which grid size fits how many picks you actually have.
           </p>
-        </div>
-        <div>
-          <p class="text-white font-semibold mb-1" data-i18n="faq2Q">
-            Is Chart Maker free to use?
+        </a>
+
+        <a
+          href="/guides/favorites-grid-ideas.html"
+          class="block bg-gray-800/40 border border-gray-700 hover:border-blue-400 rounded-xl p-5 transition"
+        >
+          <div class="text-2xl mb-2">💡</div>
+          <h2 class="text-sm font-bold text-white mb-1" data-i18n="card3Title">
+            Favorites Grid Ideas Beyond K-pop
+          </h2>
+          <p class="text-xs text-gray-400" data-i18n="card3Desc">
+            Anime, games, movies, and mood board ideas for your next grid.
           </p>
-          <p data-i18n="faq2A">
-            Yes. Chart Maker is completely free, with no sign-up or account
-            needed.
+        </a>
+
+        <a
+          href="/guides/canva-alternative.html"
+          class="block bg-gray-800/40 border border-gray-700 hover:border-blue-400 rounded-xl p-5 transition"
+        >
+          <div class="text-2xl mb-2">⚡</div>
+          <h2 class="text-sm font-bold text-white mb-1" data-i18n="card4Title">
+            A Free Alternative to Canva
+          </h2>
+          <p class="text-xs text-gray-400" data-i18n="card4Desc">
+            How Chart Maker compares for building bias charts specifically.
           </p>
-        </div>
-        <div>
-          <p class="text-white font-semibold mb-1" data-i18n="faq3Q">
-            Can I use my own photos?
-          </p>
-          <p data-i18n="faq3A">
-            Yes. Click any cell in the grid to upload a photo, then adjust its
-            zoom and position to fit exactly how you want.
-          </p>
-        </div>
-        <div>
-          <p class="text-white font-semibold mb-1" data-i18n="faq4Q">
-            Do you store my photos or chart data?
-          </p>
-          <p>
-            <span data-i18n="faq4A_pre"
-              >No. Everything is processed entirely in your browser and never
-              uploaded to any server. See our </span
-            ><a
-              href="/privacy.html"
-              class="text-blue-400 hover:text-blue-300 underline"
-              data-i18n="privacyLink"
-              >Privacy Policy</a
-            ><span data-i18n="faq4A_post"> for details.</span>
-          </p>
-        </div>
+        </a>
       </div>
     </div>
 
@@ -165,19 +175,17 @@
           navTerms: "Terms",
           navPrivacy: "Privacy",
           privacyLink: "Privacy Policy",
-          pageTitle: "Frequently Asked Questions",
-          faq1Q: "What is a bias chart?",
-          faq1A:
-            "A bias chart is a grid-style graphic ranking or showcasing your favorite characters, idols, or other picks, popularized by K-pop and anime fandoms for sharing on social media.",
-          faq2Q: "Is Chart Maker free to use?",
-          faq2A: "Yes. Chart Maker is completely free, with no sign-up or account needed.",
-          faq3Q: "Can I use my own photos?",
-          faq3A:
-            "Yes. Click any cell in the grid to upload a photo, then adjust its zoom and position to fit exactly how you want.",
-          faq4Q: "Do you store my photos or chart data?",
-          faq4A_pre:
-            "No. Everything is processed entirely in your browser and never uploaded to any server. See our ",
-          faq4A_post: " for details.",
+          pageTitle: "Guides",
+          pageIntro:
+            "Tips and walkthroughs for building bias charts, favorites grids, and photo collages.",
+          card1Title: "How to Make a Bias Chart",
+          card1Desc: "A step-by-step walkthrough from blank grid to finished, shareable PNG.",
+          card2Title: "Grid Size Guide: 3x3 vs 4x4 vs 5x5",
+          card2Desc: "Which grid size fits how many picks you actually have.",
+          card3Title: "Favorites Grid Ideas Beyond K-pop",
+          card3Desc: "Anime, games, movies, and mood board ideas for your next grid.",
+          card4Title: "A Free Alternative to Canva",
+          card4Desc: "How Chart Maker compares for building bias charts specifically.",
         },
         ko: {
           navHome: "✨ 차트 메이커",
@@ -188,19 +196,16 @@
           navTerms: "이용약관",
           navPrivacy: "개인정보",
           privacyLink: "개인정보처리방침",
-          pageTitle: "자주 묻는 질문",
-          faq1Q: "취향표(bias chart)가 뭔가요?",
-          faq1A:
-            "취향표는 좋아하는 캐릭터나 아이돌 등을 그리드 형태로 보여주는 그래픽으로, K-pop과 애니메이션 팬덤에서 SNS에 공유하기 위해 널리 사용됩니다.",
-          faq2Q: "차트 메이커는 무료인가요?",
-          faq2A: "네, 차트 메이커는 회원가입 없이 완전히 무료로 이용할 수 있습니다.",
-          faq3Q: "제 사진을 사용할 수 있나요?",
-          faq3A:
-            "네, 그리드의 칸을 클릭해 사진을 업로드한 후 원하는 대로 확대/축소와 위치를 조정할 수 있습니다.",
-          faq4Q: "제 사진이나 차트 데이터를 저장하나요?",
-          faq4A_pre:
-            "아니요. 모든 데이터는 브라우저 내에서만 처리되며 서버에 업로드되지 않습니다. 자세한 내용은 ",
-          faq4A_post: "을 참고하세요.",
+          pageTitle: "가이드",
+          pageIntro: "취향표, 최애 그리드, 포토 콜라주를 만드는 팁과 안내입니다.",
+          card1Title: "취향표 만드는 법",
+          card1Desc: "빈 그리드부터 공유 가능한 완성된 PNG까지 단계별로 안내합니다.",
+          card2Title: "그리드 크기 가이드: 3x3 vs 4x4 vs 5x5",
+          card2Desc: "실제로 담을 항목 수에 맞는 그리드 크기를 알아보세요.",
+          card3Title: "K-pop을 넘어선 취향표 아이디어",
+          card3Desc: "애니메이션, 게임, 영화, 무드보드 아이디어를 소개합니다.",
+          card4Title: "무료 캔바 대안",
+          card4Desc: "취향표 제작에 특화된 차트 메이커와의 비교입니다.",
         },
       };
 

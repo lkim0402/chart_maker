@@ -16,6 +16,36 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://chartmaker.site/guides/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://chartmaker.site/guides/how-to-make-a-bias-chart.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://chartmaker.site/guides/grid-size-guide.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://chartmaker.site/guides/favorites-grid-ideas.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://chartmaker.site/guides/canva-alternative.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://chartmaker.site/contact.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://chartmaker.site/terms.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

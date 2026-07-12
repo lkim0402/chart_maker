@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A Free, No-Signup Alternative to Canva for Bias Charts - Chart Maker</title>
+    <meta
+      name="description"
+      content="Looking for a Canva alternative for bias charts and photo grids? Chart Maker is free, requires no account, and keeps your photos on your device."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://chartmaker.site/guides/canva-alternative.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body
+    class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center px-4 sm:px-6 pb-4 sm:pb-6 pt-20 transition-colors duration-300"
+  >
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur border-b border-gray-800 px-4 sm:px-6 h-12 flex items-center justify-between"
+    >
+      <a
+        href="/"
+        class="text-sm font-extrabold text-white hover:text-blue-400 transition"
+        data-i18n="navHome"
+        >✨ Chart Maker</a
+      >
+      <div class="flex items-center gap-2 sm:gap-4">
+        <a
+          href="/about.html"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
+          data-i18n="navAbout"
+          >About</a
+        >
+        <a
+          href="/guides/"
+          class="text-[11px] sm:text-xs text-white transition"
+          data-i18n="navGuides"
+          >Guides</a
+        >
+        <a
+          href="/faq.html"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
+          data-i18n="navFaq"
+          >FAQ</a
+        >
+        <a
+          href="/contact.html"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
+          data-i18n="navContact"
+          >Contact</a
+        >
+        <a
+          href="/terms.html"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
+          data-i18n="navTerms"
+          >Terms</a
+        >
+        <a
+          href="/privacy.html"
+          class="text-[11px] sm:text-xs text-gray-400 hover:text-white transition"
+          data-i18n="navPrivacy"
+          >Privacy</a
+        >
+        <button
+          id="langToggle"
+          class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 sm:px-3 py-1.5 rounded text-[11px] sm:text-xs font-bold transition"
+        >
+          🌐 EN / KR
+        </button>
+      </div>
+    </nav>
+
+    <div class="w-full max-w-3xl">
+      <p class="text-xs text-gray-500 mb-2">
+        <a href="/guides/" class="hover:text-gray-300 underline" data-i18n="breadcrumbGuides">Guides</a>
+        <span class="mx-1">/</span>
+        <span data-i18n="breadcrumbCurrent">Canva Alternative</span>
+      </p>
+
+      <h1 class="text-2xl font-extrabold text-white mb-2 mt-2" data-i18n="pageTitle">
+        A Free, No-Signup Alternative to Canva for Bias Charts
+      </h1>
+      <p class="text-gray-400 text-xs mb-6" data-i18n="pageIntro">
+        General design tools work for bias charts, but they're built for
+        everything, not this specifically. Here's how Chart Maker compares if
+        you just want to build a grid and export it.
+      </p>
+
+      <div
+        class="bg-gray-800/40 border border-gray-700 rounded-xl p-6 sm:p-8 text-sm leading-relaxed text-gray-300 space-y-8"
+      >
+        <div>
+          <h2 class="text-base font-bold text-white mb-2" data-i18n="whyHeading">
+            Why people look for an alternative
+          </h2>
+          <p data-i18n="whyP1">
+            General-purpose design tools like Canva are powerful, but that
+            power comes with friction for a simple use case: you usually need
+            an account to save or export your work, grid layouts have to be
+            built manually from scratch, and many of the nicer templates and
+            elements sit behind a paid Pro plan.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-base font-bold text-white mb-3" data-i18n="compareHeading">
+            How Chart Maker compares
+          </h2>
+          <div class="overflow-x-auto -mx-2 px-2">
+            <table class="w-full text-xs border-collapse min-w-[420px]">
+              <thead>
+                <tr class="border-b border-gray-700 text-gray-400">
+                  <th class="text-left font-semibold py-2 pr-3" data-i18n="colFeature">Feature</th>
+                  <th class="text-left font-semibold py-2 pr-3" data-i18n="colChartMaker">Chart Maker</th>
+                  <th class="text-left font-semibold py-2" data-i18n="colGeneral">General design tools</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-800">
+                <tr>
+                  <td class="py-2 pr-3 text-gray-400" data-i18n="rowSignupLabel">Account needed</td>
+                  <td class="py-2 pr-3 text-white" data-i18n="rowSignupCM">No</td>
+                  <td class="py-2 text-gray-400" data-i18n="rowSignupGen">Usually required</td>
+                </tr>
+                <tr>
+                  <td class="py-2 pr-3 text-gray-400" data-i18n="rowGridLabel">Bias chart grid built in</td>
+                  <td class="py-2 pr-3 text-white" data-i18n="rowGridCM">Yes, by default</td>
+                  <td class="py-2 text-gray-400" data-i18n="rowGridGen">Build manually</td>
+                </tr>
+                <tr>
+                  <td class="py-2 pr-3 text-gray-400" data-i18n="rowPhotoLabel">Photo storage</td>
+                  <td class="py-2 pr-3 text-white" data-i18n="rowPhotoCM">Stays on your device</td>
+                  <td class="py-2 text-gray-400" data-i18n="rowPhotoGen">Uploaded to the service</td>
+                </tr>
+                <tr>
+                  <td class="py-2 pr-3 text-gray-400" data-i18n="rowCostLabel">Cost</td>
+                  <td class="py-2 pr-3 text-white" data-i18n="rowCostCM">Free</td>
+                  <td class="py-2 text-gray-400" data-i18n="rowCostGen">Free tier, Pro features paid</td>
+                </tr>
+                <tr>
+                  <td class="py-2 pr-3 text-gray-400" data-i18n="rowShareLabel">Share to X</td>
+                  <td class="py-2 pr-3 text-white" data-i18n="rowShareCM">Built in</td>
+                  <td class="py-2 text-gray-400" data-i18n="rowShareGen">Export, then post manually</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-base font-bold text-white mb-2" data-i18n="whenHeading">
+            When a general tool still makes sense
+          </h2>
+          <p data-i18n="whenP1">
+            If you need more advanced graphic design work - multi-page
+            documents, brand kits, video, or heavy illustration - a
+            full design suite is still the better tool for the job. Chart
+            Maker is intentionally narrow: it's built to do one thing, a
+            photo grid chart, quickly and without extra steps.
+          </p>
+        </div>
+
+        <div class="border-t border-gray-700 pt-6">
+          <p>
+            <span data-i18n="ctaP_pre">See the full process in the </span
+            ><a
+              href="/guides/how-to-make-a-bias-chart.html"
+              class="text-blue-400 hover:text-blue-300 underline"
+              data-i18n="ctaLink"
+              >step-by-step guide</a
+            ><span data-i18n="ctaP_post">, or open the editor and try it directly.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <footer
+      class="w-full max-w-3xl mt-10 border-t border-gray-800 py-6 text-center text-xs text-gray-500"
+    >
+      <a href="/about.html" class="hover:text-gray-300 underline mx-2" data-i18n="navAbout"
+        >About</a
+      >
+      <a href="/guides/" class="hover:text-gray-300 underline mx-2" data-i18n="navGuides"
+        >Guides</a
+      >
+      <a href="/faq.html" class="hover:text-gray-300 underline mx-2" data-i18n="navFaq"
+        >FAQ</a
+      >
+      <a href="/contact.html" class="hover:text-gray-300 underline mx-2" data-i18n="navContact"
+        >Contact</a
+      >
+      <a href="/terms.html" class="hover:text-gray-300 underline mx-2" data-i18n="navTerms"
+        >Terms</a
+      >
+      <a
+        href="/privacy.html"
+        class="hover:text-gray-300 underline mx-2"
+        data-i18n="privacyLink"
+        >Privacy Policy</a
+      >
+    </footer>
+
+    <script>
+      const i18n = {
+        en: {
+          navHome: "✨ Chart Maker",
+          navAbout: "About",
+          navGuides: "Guides",
+          navFaq: "FAQ",
+          navContact: "Contact",
+          navTerms: "Terms",
+          navPrivacy: "Privacy",
+          privacyLink: "Privacy Policy",
+          breadcrumbGuides: "Guides",
+          breadcrumbCurrent: "Canva Alternative",
+          pageTitle: "A Free, No-Signup Alternative to Canva for Bias Charts",
+          pageIntro:
+            "General design tools work for bias charts, but they're built for everything, not this specifically. Here's how Chart Maker compares if you just want to build a grid and export it.",
+          whyHeading: "Why people look for an alternative",
+          whyP1:
+            "General-purpose design tools like Canva are powerful, but that power comes with friction for a simple use case: you usually need an account to save or export your work, grid layouts have to be built manually from scratch, and many of the nicer templates and elements sit behind a paid Pro plan.",
+          compareHeading: "How Chart Maker compares",
+          colFeature: "Feature",
+          colChartMaker: "Chart Maker",
+          colGeneral: "General design tools",
+          rowSignupLabel: "Account needed",
+          rowSignupCM: "No",
+          rowSignupGen: "Usually required",
+          rowGridLabel: "Bias chart grid built in",
+          rowGridCM: "Yes, by default",
+          rowGridGen: "Build manually",
+          rowPhotoLabel: "Photo storage",
+          rowPhotoCM: "Stays on your device",
+          rowPhotoGen: "Uploaded to the service",
+          rowCostLabel: "Cost",
+          rowCostCM: "Free",
+          rowCostGen: "Free tier, Pro features paid",
+          rowShareLabel: "Share to X",
+          rowShareCM: "Built in",
+          rowShareGen: "Export, then post manually",
+          whenHeading: "When a general tool still makes sense",
+          whenP1:
+            "If you need more advanced graphic design work - multi-page documents, brand kits, video, or heavy illustration - a full design suite is still the better tool for the job. Chart Maker is intentionally narrow: it's built to do one thing, a photo grid chart, quickly and without extra steps.",
+          ctaP_pre: "See the full process in the ",
+          ctaLink: "step-by-step guide",
+          ctaP_post: ", or open the editor and try it directly.",
+        },
+        ko: {
+          navHome: "✨ 차트 메이커",
+          navAbout: "소개",
+          navGuides: "가이드",
+          navFaq: "FAQ",
+          navContact: "문의",
+          navTerms: "이용약관",
+          navPrivacy: "개인정보",
+          privacyLink: "개인정보처리방침",
+          breadcrumbGuides: "가이드",
+          breadcrumbCurrent: "캔바 대안",
+          pageTitle: "회원가입 없이 무료로 취향표를 만드는 캔바 대안",
+          pageIntro:
+            "일반적인 디자인 툴로도 취향표를 만들 수는 있지만, 이런 툴들은 모든 용도를 위한 것이지 취향표만을 위한 것은 아닙니다. 그리드를 만들고 바로 내보내고 싶다면 차트 메이커와 어떻게 다른지 비교해봤습니다.",
+          whyHeading: "대안을 찾는 이유",
+          whyP1:
+            "캔바 같은 범용 디자인 툴은 강력하지만, 단순한 용도에는 오히려 번거로움이 따릅니다. 작업을 저장하거나 내보내려면 보통 계정이 필요하고, 그리드 레이아웃은 처음부터 직접 만들어야 하며, 더 예쁜 템플릿과 요소들은 대부분 유료 Pro 플랜 안에 있습니다.",
+          compareHeading: "차트 메이커와 비교하면",
+          colFeature: "기능",
+          colChartMaker: "차트 메이커",
+          colGeneral: "일반 디자인 툴",
+          rowSignupLabel: "계정 필요 여부",
+          rowSignupCM: "필요 없음",
+          rowSignupGen: "대부분 필요",
+          rowGridLabel: "취향표 그리드 내장",
+          rowGridCM: "기본 제공",
+          rowGridGen: "직접 제작",
+          rowPhotoLabel: "사진 저장 방식",
+          rowPhotoCM: "기기 안에만 보관",
+          rowPhotoGen: "서비스에 업로드",
+          rowCostLabel: "비용",
+          rowCostCM: "무료",
+          rowCostGen: "무료 등급 + 유료 Pro 기능",
+          rowShareLabel: "X 공유",
+          rowShareCM: "내장 기능",
+          rowShareGen: "내보낸 후 직접 게시",
+          whenHeading: "그래도 일반 툴이 더 나을 때",
+          whenP1:
+            "여러 페이지 문서, 브랜드 키트, 영상, 복잡한 일러스트 작업처럼 더 고급 디자인 작업이 필요하다면 종합 디자인 툴이 여전히 더 적합합니다. 차트 메이커는 의도적으로 범위를 좁혀, 포토 그리드 차트라는 한 가지 작업을 빠르고 군더더기 없이 해내는 데 집중합니다.",
+          ctaP_pre: "전체 과정은 ",
+          ctaLink: "단계별 가이드",
+          ctaP_post: "에서 확인하거나, 바로 에디터를 열어 직접 사용해보세요.",
+        },
+      };
+
+      let currentLang = navigator.language.startsWith("ko") ? "ko" : "en";
+
+      function applyTranslations() {
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (i18n[currentLang][key]) el.innerText = i18n[currentLang][key];
+        });
+      }
+
+      document.getElementById("langToggle").addEventListener("click", () => {
+        currentLang = currentLang === "en" ? "ko" : "en";
+        applyTranslations();
+      });
+
+      applyTranslations();
+    </script>
+  </body>
+</html>
